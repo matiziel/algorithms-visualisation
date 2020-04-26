@@ -18,7 +18,8 @@ namespace DataStructures
 
         public void Add(T item)
         {
-            throw new NotImplementedException();
+            if(root == null)
+                root = new Node(item);
         }
 
         public void Clear()
