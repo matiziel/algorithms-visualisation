@@ -13,21 +13,15 @@ const VertexState = {
 }
 
 function Grid(props) {
-    const [grid, setGrid] = useState([]);
+    const [grid, setGrid] = useState(Utils.getGrid(props.gridWidth, props.gridHeight));
+
     useEffect(() => {
         const fetchData = () => {
-            let graphArray = Array(props.gridWidth);
-            for (let i = 0; i < props.gridWidth; ++i) {
-                graphArray[i] = Array(props.gridHeight);
-                for (let k = 0; k < props.gridHeight; ++k)
-                    graphArray[i][k] = VertexState.Blank;
-            }
-            setGrid(graphArray);
-            console.log("ELOELO");
-            console.log(grid.graph);
+            // console.log(grid);
+            console.log("elo");
         };
         fetchData();
-    }, [props.size]);
+    }, [grid]);
 
     const disableVertex = (e) => {
 
@@ -38,15 +32,17 @@ function Grid(props) {
 
         let newGraph = [...grid];
         if (grid[xarg][yarg] === VertexState.Disabled) {
+            console.log("disabled");
             newGraph[xarg][yarg] = VertexState.Blank
             e.target.setAttribute("fill", "#ffffff");
         }
         else {
+            console.log("notdisabled");
             newGraph[xarg][yarg] = VertexState.Disabled;
-            e.target.setAttribute("fill", "#ffffff");
+            e.target.setAttribute("fill", "#707070");
         }
         setGrid(newGraph);
-
+        console.log(JSON.stringify(grid));
         // console.log(xarg);
         // console.log(yarg);
         // console.log(e.target.style);
