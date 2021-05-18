@@ -19,7 +19,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <Grid size={30} gridWidth={70} gridHeight={40}></Grid>
+      <Grid size={30} gridWidth={64} gridHeight={32}></Grid>
     </div>
   );
 }

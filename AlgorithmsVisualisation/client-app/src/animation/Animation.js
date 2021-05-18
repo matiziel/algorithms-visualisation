@@ -5,19 +5,36 @@ class Animation {
     state;
     currentFrame;
     frames;
-    constructor() {
+    width;
+    height;
+    constructor(width, height) {
         this.state = AnimationState.Init;
         this.currentFrame = 0;
-        this.frames = [];
+        this.frames = Utils.getRandomFrames(15, width, height);
+        this.width = width;
+        this.height = height;
+    }
+    GetEmptyGrid() {
+        return Utils.getGrid(this.width, this.height);
+    }
+    GetState() {
+        return this.state;
+    }
+    SetState(state) {
+        this.state = state;
     }
     SetRandomFrames(amount) {
-        frames = Utils.getRandomFrames();
+        this.frames = Utils.getRandomFrames(amount);
     }
-    Step() {
+    Step(iteration) {
+        return this.frames[iteration];
     }
-    GetEmptyGrid(width, height) {
-        return Utils.getGrid(width, height);
+    Reset() {
+        this.state = AnimationState.Init;
+        this.currentFrame = 0;
     }
+
+
 }
 
 
