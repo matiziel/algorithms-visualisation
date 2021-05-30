@@ -105,10 +105,9 @@ function Grid(props) {
                 }
             </svg>
             <br></br>
-            <Button className="btn btn-primary" onClick={runAlgorithm}>Run</Button>
-            <Button className="btn btn-primary" onClick={pauseAlgorithm}>Pause</Button>
-            <Button className="btn btn-primary" onClick={clearGrid}>Clear</Button>
-
+            <Button className="btn btn-primary" onClick={runAlgorithm}>Run</Button> 
+            <Button className="btn btn-primary" onClick={pauseAlgorithm}>Pause</Button> 
+            <Button className="btn btn-primary" onClick={clearGrid}>Clear</Button> 
         </div>
     );
 }
