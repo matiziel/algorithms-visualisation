@@ -58,6 +58,8 @@ function Grid(props) {
         if (animation.GetState() !== AnimationState.Init && animation.GetState() !== AnimationState.Pause)
             return;
 
+        console.log(JSON.stringify(animation.frames));
+        console.log(JSON.stringify(grid));
         animation.SetState(AnimationState.Run);
 
         for (let i = animation.currentFrame; i < animation.frames.length; ++i) {
@@ -69,6 +71,7 @@ function Grid(props) {
             await Utils.sleep(frameTime);
         }
         animation.SetState(AnimationState.Init);
+
     }
 
     const step = (frame) => {
@@ -98,16 +101,16 @@ function Grid(props) {
                     Utils.range(0, props.gridHeight).map(yarg =>
                         Utils.range(0, props.gridWidth).map(xarg => (
                             <rect x={xarg * props.size} y={yarg * props.size} width={props.size} height={props.size}
-                                fill={VertexColour(grid[xarg][yarg])} stroke="#000" stroke-opacity="0.2" onClick={disableVertex}>
+                                fill={VertexColour(grid[xarg][yarg])} stroke="#000" strokeOpacity="0.2" onClick={disableVertex}>
                             </rect>
                         ))
                     )
                 }
             </svg>
             <br></br>
-            <Button className="btn btn-primary" onClick={runAlgorithm}>Run</Button> 
-            <Button className="btn btn-primary" onClick={pauseAlgorithm}>Pause</Button> 
-            <Button className="btn btn-primary" onClick={clearGrid}>Clear</Button> 
+            <Button className="btn btn-primary" onClick={runAlgorithm}>Run</Button>
+            <Button className="btn btn-primary" onClick={pauseAlgorithm}>Pause</Button>
+            <Button className="btn btn-primary" onClick={clearGrid}>Clear</Button>
         </div>
     );
 }
