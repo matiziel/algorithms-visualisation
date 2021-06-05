@@ -6,7 +6,6 @@ using GraphsAlgorithms.GraphModel;
 
 namespace Application {
     public class GraphBuilder : IGraphBuilder {
-
         public Graph BuildGraphFromGrid(Grid grid) {
             throw new NotImplementedException();
         }

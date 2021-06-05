@@ -1,5 +1,8 @@
+using System;
 using Contracts.Services;
-using Contracts.DataTransferObjects.Result;
+using GraphsAlgorithms.Result;
+using Common;
+using Contracts.DataTransferObjects;
 
 namespace Application {
     public class AlgorithmExecutor : IAlgorithmExecutor {
@@ -11,8 +14,10 @@ namespace Application {
             _builder = builder;
         }
 
-        public AlgorithmResult Execute() {
-            throw new System.NotImplementedException();
+        public AlgorithmResult Execute(Grid grid, AlgorithmType type) {
+            var graph = _builder.BuildGraphFromGrid(grid);
+            var algorithm = _factory.Create(graph, type);
+            return algorithm.Execute();
         }
     }
 }

@@ -8,7 +8,11 @@ using GraphsAlgorithms.GraphModel;
 namespace Application {
     public class AlgorithmFactory : IAlgorithmFactory {
         public IPathFindingAlgorithm Create(Graph graph, AlgorithmType type) {
-            throw new NotImplementedException();
+            return type switch {
+                AlgorithmType.AStar => new AStar(graph),
+                AlgorithmType.BreadthFirstSearch => new BreadthFirstSearch(graph),
+                _ => throw new ArgumentException("Given algorithm does not exist")
+            };
         }
     }
 }
