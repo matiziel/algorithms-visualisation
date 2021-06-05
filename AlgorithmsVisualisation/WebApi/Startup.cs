@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Contracts.Services;
+using Application;
 
 namespace WebApi
 {
@@ -28,7 +30,9 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSingleton<IGraphBuilder, GraphBuilder>();
+            services.AddSingleton<IAlgorithmFactory, AlgorithmFactory>();
+            
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

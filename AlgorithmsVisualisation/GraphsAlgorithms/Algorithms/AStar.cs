@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using GraphsAlgorithms.Graph;
 
-namespace GraphsAlgorithms {
-    public class AStar {
+namespace GraphsAlgorithms.Algorithms {
+    public class AStar : IPathFindingAlgorithm{
         private List<Vertex> AdjacencyList { get; }
     }
 }
