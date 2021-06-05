@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using GraphsAlgorithms.Graph;
+using GraphsAlgorithms.GraphModel;
 
 namespace GraphsAlgorithms.Algorithms {
     public class BreadthFirstSearch : IPathFindingAlgorithm {
-        private List<Vertex> AdjacencyList { get; }
+        private Graph Graph { get; }
     }
 }

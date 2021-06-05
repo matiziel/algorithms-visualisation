@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using GraphsAlgorithms.Graph;
+using GraphsAlgorithms.GraphModel;
 
 namespace GraphsAlgorithms.Algorithms {
     public class AStar : IPathFindingAlgorithm{

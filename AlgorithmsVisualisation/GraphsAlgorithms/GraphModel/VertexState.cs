@@ -1,4 +1,4 @@
-namespace GraphsAlgorithms.Graph {
+namespace GraphsAlgorithms.GraphModel {
     public enum VertexState {
         Unvisited, OpenSet, Visited
     }

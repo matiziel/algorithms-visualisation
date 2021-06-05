@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GraphsAlgorithms.Result {
+namespace Contracts.DataTransferObjects.Result {
     public class AlgorithmResult {
         public List<Frame> Frames { get; set; }
     }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GraphsAlgorithms.Graph {
+namespace GraphsAlgorithms.GraphModel {
     public class Vertex {
         public int Index { get; }
         public int X { get; }

@@ -1,4 +1,4 @@
-namespace GraphsAlgorithms.Result {
+namespace Contracts.DataTransferObjects.Result {
     public enum ResultVertexState {
         Blank = 0,
         Disabled = 1,

@@ -1,7 +1,5 @@
-namespace GraphsAlgorithms.Algorithms
-{
-    public interface IPathFindingAlgorithm
-    {
-         
+namespace GraphsAlgorithms.Algorithms {
+    public interface IPathFindingAlgorithm {
+
     }
 }

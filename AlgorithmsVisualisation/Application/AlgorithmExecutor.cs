@@ -1,7 +1,8 @@
 using Contracts.Services;
+using Contracts.DataTransferObjects.Result;
 
 namespace Application {
-    public class AlgorithmExecutor {
+    public class AlgorithmExecutor : IAlgorithmExecutor {
         private readonly IAlgorithmFactory _factory;
         private readonly IGraphBuilder _builder;
 
@@ -10,5 +11,8 @@ namespace Application {
             _builder = builder;
         }
 
+        public AlgorithmResult Execute() {
+            throw new System.NotImplementedException();
+        }
     }
 }
