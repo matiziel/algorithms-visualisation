@@ -32,6 +32,7 @@ namespace WebApi
         {
             services.AddSingleton<IGraphBuilder, GraphBuilder>();
             services.AddSingleton<IAlgorithmFactory, AlgorithmFactory>();
+            services.AddSingleton<IAlgorithmExecutor, AlgorithmExecutor>();
             
             services.AddControllers();
             services.AddSwaggerGen(c =>
