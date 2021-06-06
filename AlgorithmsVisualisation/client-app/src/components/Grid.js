@@ -98,8 +98,8 @@ function Grid(props) {
         <div>
             <svg height={props.gridHeight * props.size} width={props.gridWidth * props.size}>
                 {
-                    Utils.range(0, props.gridHeight).map(yarg =>
-                        Utils.range(0, props.gridWidth).map(xarg => (
+                    Utils.range(0, props.gridWidth).map(xarg =>
+                        Utils.range(0, props.gridHeight).map(yarg => (
                             <rect x={xarg * props.size} y={yarg * props.size} width={props.size} height={props.size}
                                 fill={VertexColour(grid[xarg][yarg])} stroke="#000" strokeOpacity="0.2" onClick={disableVertex}>
                             </rect>

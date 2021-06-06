@@ -15,7 +15,6 @@ namespace WebApi.Controllers {
             _executor = executor;
         }
 
-
         [HttpPost("{type:int}")]
         public ActionResult Execute(int type, [FromBody] Grid grid) {
             try {
