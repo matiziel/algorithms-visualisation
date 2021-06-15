@@ -15,8 +15,14 @@ const VertexColour = (state) => {
             return "#ffffff";
         case VertexState.Disabled:
             return "#707070";
-        case VertexState.Visited:
+        case VertexState.OpenSet:
             return "#77cf56";
+        case VertexState.Visited:
+            return "#cef0da";
+        case VertexState.Begin:
+            return "#3338ff";
+        case VertexState.End:
+            return "#e24e54";
         default:
             return "#ffffff";
     }
@@ -27,7 +33,7 @@ function Grid(props) {
     const [animation, setAnimation] = useState(new Animation(props.gridWidth, props.gridHeight))
     const [grid, setGrid] = useState([...animation.GetEmptyGrid()]);
 
-    let frameTime = 500;
+    let frameTime = 1;
 
     useEffect(() => {
         const fetchData = () => {
@@ -39,7 +45,6 @@ function Grid(props) {
         if (animation.GetState() !== AnimationState.Init)
             return;
 
-        console.log(animation);
         let xarg = parseInt(e.target.getAttribute("x")) / props.size;
         let yarg = parseInt(e.target.getAttribute("y")) / props.size;
         if (grid[xarg][yarg] === VertexState.Begin || grid[xarg][yarg] === VertexState.End)
@@ -58,8 +63,12 @@ function Grid(props) {
         if (animation.GetState() !== AnimationState.Init && animation.GetState() !== AnimationState.Pause)
             return;
 
-        console.log(JSON.stringify(animation.frames));
-        console.log(JSON.stringify(grid));
+        if (animation.GetState() === AnimationState.Init) {
+            await animation.SetFrames(grid, 1);
+            console.log(animation.frames);
+        }
+
+
         animation.SetState(AnimationState.Run);
 
         for (let i = animation.currentFrame; i < animation.frames.length; ++i) {
@@ -77,7 +86,6 @@ function Grid(props) {
     const step = (frame) => {
         let newGrid = [...grid];
         for (let i = 0; i < frame.length; ++i) {
-            console.log(frame);
             let x = frame[i][0];
             let y = frame[i][1];
             newGrid[x][y] = frame[i][2];

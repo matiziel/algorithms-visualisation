@@ -1,8 +1,8 @@
-using System;
 using Contracts.Services;
-using GraphsAlgorithms.Result;
 using Common;
 using Contracts.DataTransferObjects;
+using Application.Extensions;
+
 
 namespace Application {
     public class AlgorithmExecutor : IAlgorithmExecutor {
@@ -14,10 +14,10 @@ namespace Application {
             _builder = builder;
         }
 
-        public AlgorithmResult Execute(Grid grid, AlgorithmType type) {
+        public Animation Execute(Grid grid, AlgorithmType type) {
             var graph = _builder.BuildGraphFromGrid(grid);
             var algorithm = _factory.Create(graph, type);
-            return algorithm.Execute();
+            return algorithm.Execute().MapToAnimation();
         }
     }
 }

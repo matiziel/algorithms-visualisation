@@ -1,5 +1,6 @@
 import Utils from '../Utils.js';
-import AnimationState from '../animation/AnimationState.js';
+import AnimationState from './AnimationState.js';
+import ApiClient from '../ApiClient.js';
 
 class Animation {
     state;
@@ -10,7 +11,7 @@ class Animation {
     constructor(width, height) {
         this.state = AnimationState.Init;
         this.currentFrame = 0;
-        this.frames = Utils.getRandomFrames(15, width, height);
+        this.frames = [];
         this.width = width;
         this.height = height;
     }
@@ -22,6 +23,9 @@ class Animation {
     }
     SetState(state) {
         this.state = state;
+    }
+    async SetFrames(grid, type) {
+        this.frames = await ApiClient.getAlgorithm(grid, type)
     }
     SetRandomFrames(amount) {
         this.frames = Utils.getRandomFrames(amount);

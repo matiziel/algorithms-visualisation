@@ -1,3 +1,5 @@
+import VertexState from "./animation/VertexState";
+
 const Utils = {
     range: (min, max) => Array.from({ length: max - min }, (_, i) => min + i),
 
@@ -5,8 +7,14 @@ const Utils = {
         let grid = Array(width);
         for (let i = 0; i < width; ++i) {
             grid[i] = Array(heigth);
-            for (let k = 0; k < heigth; ++k)
-                grid[i][k] = 0;
+            for (let k = 0; k < heigth; ++k) {
+                if (i == 5 && k == 16)
+                    grid[i][k] = VertexState.Begin;
+                else if (i == 19 && k == 16)
+                    grid[i][k] = VertexState.End;
+                else
+                    grid[i][k] = VertexState.Blank;
+            }
 
         }
         return grid;
@@ -24,8 +32,8 @@ const Utils = {
             frames.push(frame);
         }
         return frames;
-    },
 
+    },
     sleep: (ms) => {
         return new Promise(resolve => setTimeout(resolve, ms));
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Common;
+using System.Linq;
 
 namespace Contracts.DataTransferObjects {
     public class Grid {
@@ -87,8 +88,9 @@ namespace Contracts.DataTransferObjects {
             if ((GridElementState)GridArray[x][y] != GridElementState.Disabled)
                 edges.Add(CalculateIndex(x, y), value);
         }
-        private static int CalculateIndex(int x, int y) {
-            return x * y + y;
+        private int CalculateIndex(int x, int y) {
+            int height = GridArray[0].Count;
+            return x * height + y;
         }
     }
 }
