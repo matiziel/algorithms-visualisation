@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GraphsAlgorithms.GraphModel;
 using GraphsAlgorithms.Result;
 using Common;
+using GraphsAlgorithms.Extensions;
 
 namespace GraphsAlgorithms.Algorithms {
     public class BreadthFirstSearch : IPathFindingAlgorithm {
@@ -17,28 +18,6 @@ namespace GraphsAlgorithms.Algorithms {
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
 
-            var visited = new List<Vertex>();
-
-
-
-            // var queue = new Queue<int>();
-            // queue.Enqueue(startIndex);
-
-            // while (queue.Count > 0) {
-            //     var vertex = queue.Dequeue();
-
-            //     if (visited.Contains(vertex))
-            //         continue;
-
-            //     visited.Add(vertex);
-
-            //     foreach (var neighbor in _graph.AdjacencyList[vertex].Edges)
-            //         if (!visited.Contains(neighbor.Key))
-            //         {
-            //             queue.Enqueue(neighbor);
-            //         }
-            // }
-
 
             var queue = new Queue<Vertex>();
             queue.Enqueue(_graph.AdjacencyList[startIndex]);
@@ -46,24 +25,18 @@ namespace GraphsAlgorithms.Algorithms {
             while (queue.Count > 0) {
                 var vertex = queue.Dequeue();
 
-                if (visited.Any(v => v.Index == vertex.Index))
+                if (vertex.IsVisited())
                     continue;
 
-
-                visited.Add(vertex);
+                vertex.Visit();
 
                 if (vertex.Index != startIndex)
-                    frames.Add(new Frame {
-                        FrameElements = new List<FrameElement> {
-                            new FrameElement() {
-                                X = vertex.X, Y = vertex.Y, State = GridElementState.Visited
-                            }
-                        }
-                    });
+                    frames.AddVisitedVertexFrame(vertex);
 
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
                 };
+
                 foreach (int neighborIndex in vertex.Edges.Keys) {
 
                     if (neighborIndex == endIndex)
@@ -71,16 +44,15 @@ namespace GraphsAlgorithms.Algorithms {
                             Frames = frames
                         };
 
-                    if (!visited.Any(v => v.Index == neighborIndex)) {
-                        var tmpVertex = _graph.AdjacencyList[neighborIndex];
-                        if (tmpVertex.Index != endIndex)
-                            frame.FrameElements.Add(
-                                new FrameElement() {
-                                    X = tmpVertex.X, Y = tmpVertex.Y, State = GridElementState.OpenSet
-                                }
-                            );
-                        queue.Enqueue(tmpVertex);
-                    }
+                    if (_graph.AdjacencyList[neighborIndex].IsVisited())
+                        continue;
+
+                    var tmpVertex = _graph.AdjacencyList[neighborIndex];
+
+                    frame.AddOpenSetVertexFrameElement(tmpVertex);
+
+                    queue.Enqueue(tmpVertex);
+
                 }
                 frames.Add(frame);
             }

@@ -64,7 +64,7 @@ function Grid(props) {
             return;
 
         if (animation.GetState() === AnimationState.Init) {
-            await animation.SetFrames(grid, 1);
+            await animation.SetFrames(grid, 3);
             console.log(animation.frames);
         }
 

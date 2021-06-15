@@ -11,6 +11,7 @@ namespace Application {
             return type switch {
                 AlgorithmType.AStar => new AStar(graph),
                 AlgorithmType.BreadthFirstSearch => new BreadthFirstSearch(graph),
+                AlgorithmType.Dijkstra => new Dijkstra(graph),
                 _ => throw new ArgumentException("Given algorithm does not exist")
             };
         }

@@ -16,5 +16,9 @@ namespace GraphsAlgorithms.GraphModel {
         public void FillEdges(Dictionary<int, double> edges) {
             Edges = edges;
         }
+        public bool IsVisited()
+            => State == VertexState.Visited;
+        public void Visit()
+            => State = VertexState.Visited;
     }
 }

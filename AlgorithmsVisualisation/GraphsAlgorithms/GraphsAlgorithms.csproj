@@ -6,4 +6,7 @@
     <ItemGroup>
     <ProjectReference Include="../Common/Common.csproj" />
   </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />
+    </ItemGroup>
 </Project>
