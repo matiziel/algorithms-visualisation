@@ -6,23 +6,26 @@ using Contracts.DataTransferObjects;
 using Contracts.Services;
 using GraphsAlgorithms.GraphModel;
 using Contracts.Extensions;
+using Application.Models;
 
 namespace Application {
     public class GraphBuilder : IGraphBuilder {
-        public Graph BuildGraphFromGrid(Grid grid) {
-            if (grid.GridArray.Count == 0)
+        public Graph BuildGraphFromGrid(List<List<int>> grid) {
+            if (grid.Count == 0)
                 throw new ArgumentException("Grid cannot be empty");
-            int width = grid.GridArray.Count;
-            int height = grid.GridArray[0].Count;
-            List<Vertex> adjacencyList = new(grid.GridArray.Count);
-            for (int x = 0; x < width; ++x) {
-                for (int y = 0; y < height; ++y) {
-                    if (!Enum.IsDefined(typeof(GridElementState), grid.GridArray[x][y]))
+
+            var gridModel = new GridModel(grid);
+
+            List<Vertex> adjacencyList = new(gridModel.Width * gridModel.Height);
+
+            for (int x = 0; x < gridModel.Width; ++x) {
+                for (int y = 0; y < gridModel.Height; ++y) {
+                    if (!Enum.IsDefined(typeof(GridElementState), gridModel[x, y]))
                         throw new ArgumentException("Grid element has incorrect state value");
 
-                    var vertex = new Vertex(x * height + y, x, y);
-                    if (!CheckIfDisabled(grid.GridArray[x][y])) {
-                        vertex.FillEdges(grid.GetVertexEdges(x, y));
+                    var vertex = new Vertex(x * gridModel.Height + y, x, y);
+                    if (!CheckIfDisabled(gridModel[x, y])) {
+                        vertex.FillEdges(gridModel.GetVertexEdges(x, y));
                     }
                     adjacencyList.Add(vertex);
                 }

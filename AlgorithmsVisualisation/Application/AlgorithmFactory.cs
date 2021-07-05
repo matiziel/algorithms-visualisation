@@ -7,6 +7,7 @@ using GraphsAlgorithms.GraphModel;
 
 namespace Application {
     public class AlgorithmFactory : IAlgorithmFactory {
+        
         public IPathFindingAlgorithm Create(Graph graph, AlgorithmType type) {
             return type switch {
                 AlgorithmType.AStar => new AStar(graph),

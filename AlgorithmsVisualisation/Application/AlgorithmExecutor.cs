@@ -15,7 +15,7 @@ namespace Application {
         }
 
         public Animation Execute(Grid grid, AlgorithmType type) {
-            var graph = _builder.BuildGraphFromGrid(grid);
+            var graph = _builder.BuildGraphFromGrid(grid.GridArray);
             var algorithm = _factory.Create(graph, type);
             return algorithm.Execute().MapToAnimation();
         }
