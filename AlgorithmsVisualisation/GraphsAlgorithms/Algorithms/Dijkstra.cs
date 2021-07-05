@@ -8,10 +8,12 @@ using Priority_Queue;
 namespace GraphsAlgorithms.Algorithms {
     public class Dijkstra : IPathFindingAlgorithm {
         private readonly Graph _graph;
-        private readonly int startIndex = 176;
-        private readonly int endIndex = 624;
-        public Dijkstra(Graph graph) {
+        private readonly int _startIndex;
+        private readonly int _endIndex;
+        public Dijkstra(Graph graph, int startIndex, int endIndex) {
             _graph = graph;
+            _startIndex = startIndex;
+            _endIndex = endIndex;
         }
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
@@ -27,7 +29,7 @@ namespace GraphsAlgorithms.Algorithms {
 
                 vertex.Visit();
 
-                if (vertex.Index != startIndex)
+                if (vertex.Index != _startIndex)
                     frames.AddVisitedVertexFrame(vertex);
 
                 var frame = new Frame() {
@@ -36,7 +38,7 @@ namespace GraphsAlgorithms.Algorithms {
 
                 foreach (int neighborIndex in vertex.Edges.Keys) {
 
-                    if (neighborIndex == endIndex)
+                    if (neighborIndex == _endIndex)
                         return new AlgorithmResult() {
                             Frames = frames
                         };
@@ -65,7 +67,7 @@ namespace GraphsAlgorithms.Algorithms {
             for (int i = 0; i < _graph.AdjacencyList.Count; i++) {
                 distances.Add(double.MaxValue);
             }
-            distances[startIndex] = 0;
+            distances[_startIndex] = 0;
             return distances;
         }
 

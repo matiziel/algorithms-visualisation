@@ -9,18 +9,19 @@ using GraphsAlgorithms.Extensions;
 namespace GraphsAlgorithms.Algorithms {
     public class BreadthFirstSearch : IPathFindingAlgorithm {
         private readonly Graph _graph;
-        private readonly int startIndex = 176;
-        private readonly int endIndex = 624;
-        public BreadthFirstSearch(Graph graph) {
+        private readonly int _startIndex;
+        private readonly int _endIndex;
+        public BreadthFirstSearch(Graph graph, int startIndex, int endIndex) {
             _graph = graph;
+            _startIndex = startIndex;
+            _endIndex = endIndex;
         }
 
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
 
-
             var queue = new Queue<Vertex>();
-            queue.Enqueue(_graph.AdjacencyList[startIndex]);
+            queue.Enqueue(_graph.AdjacencyList[_startIndex]);
 
             while (queue.Count > 0) {
                 var vertex = queue.Dequeue();
@@ -30,7 +31,7 @@ namespace GraphsAlgorithms.Algorithms {
 
                 vertex.Visit();
 
-                if (vertex.Index != startIndex)
+                if (vertex.Index != _startIndex)
                     frames.AddVisitedVertexFrame(vertex);
 
                 var frame = new Frame() {
@@ -39,7 +40,7 @@ namespace GraphsAlgorithms.Algorithms {
 
                 foreach (int neighborIndex in vertex.Edges.Keys) {
 
-                    if (neighborIndex == endIndex)
+                    if (neighborIndex == _endIndex)
                         return new AlgorithmResult() {
                             Frames = frames
                         };

@@ -6,10 +6,12 @@ using GraphsAlgorithms.Result;
 namespace GraphsAlgorithms.Algorithms {
     public class AStar : IPathFindingAlgorithm {
         private readonly Graph _graph;
-        private readonly int startIndex = 176;
-        private readonly int endIndex = 624;
-        public AStar(Graph graph) {
+        private readonly int _startIndex;
+        private readonly int _endIndex;
+        public AStar(Graph graph, int startIndex, int endIndex) {
             _graph = graph;
+            _startIndex = startIndex;
+            _endIndex = endIndex;
         }
 
         public AlgorithmResult Execute() {

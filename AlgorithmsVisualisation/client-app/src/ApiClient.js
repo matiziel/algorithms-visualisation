@@ -2,9 +2,16 @@ import axios from 'axios';
 
 const ApiClient = {
     apiUrl: (path) => ('/api' + path),
-    getAlgorithm: async function (grid, type) {
+    getAlgorithm: async function (grid, startIndex, endIndex, type) {
         try {
-            const result = await axios.post(this.apiUrl('/PathFindingAlgorithms/' + type), { GridArray: grid });
+            const result = await axios.post(
+                this.apiUrl('/PathFindingAlgorithms/' + type),
+                {
+                    GridArray: grid,
+                    Start: startIndex,
+                    End: endIndex
+                }
+            );
             console.log(result.data.frames);
             return result.data.frames;
 

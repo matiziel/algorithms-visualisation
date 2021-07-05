@@ -8,12 +8,16 @@ class Animation {
     frames;
     width;
     height;
+    startIndex;
+    endIndex;
     constructor(width, height) {
         this.state = AnimationState.Init;
         this.currentFrame = 0;
         this.frames = [];
         this.width = width;
         this.height = height;
+        this.startIndex = 176;
+        this.endIndex = 624;
     }
     GetEmptyGrid() {
         return Utils.getGrid(this.width, this.height);
@@ -24,8 +28,14 @@ class Animation {
     SetState(state) {
         this.state = state;
     }
+    SetStartPoint(x, y) {
+        this.startIndex = x * this.height + y;
+    }
+    SetStartPoint(x, y) {
+        this.endIndex = x * this.height + y;
+    }
     async SetFrames(grid, type) {
-        this.frames = await ApiClient.getAlgorithm(grid, type)
+        this.frames = await ApiClient.getAlgorithm(grid, this.startIndex, this.endIndex, type)
     }
     SetRandomFrames(amount) {
         this.frames = Utils.getRandomFrames(amount);
@@ -40,6 +50,5 @@ class Animation {
 
 
 }
-
 
 export default Animation;

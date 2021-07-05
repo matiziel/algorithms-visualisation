@@ -5,6 +5,6 @@ using GraphsAlgorithms.GraphModel;
 
 namespace Contracts.Services {
     public interface IAlgorithmFactory {
-        public IPathFindingAlgorithm Create(Graph graph, AlgorithmType type);
+        public IPathFindingAlgorithm Create(Graph graph, int start, int end, AlgorithmType type);
     }
 }

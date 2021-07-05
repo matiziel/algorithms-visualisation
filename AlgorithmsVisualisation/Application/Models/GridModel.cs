@@ -98,9 +98,7 @@ namespace Application.Models {
             if ((GridElementState)_gridArray[x][y] != GridElementState.Disabled)
                 edges.Add(CalculateIndex(x, y), value);
         }
-        private int CalculateIndex(int x, int y) {
-            int height = _gridArray[0].Count;
-            return x * height + y;
-        }
+        private int CalculateIndex(int x, int y) => x * Height + y;
+
     }
 }
