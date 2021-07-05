@@ -42,7 +42,7 @@ namespace GraphsAlgorithms.Algorithms {
                         return new AlgorithmResult() {
                             Frames = frames
                         };
-                    var tmpVertex = _graph.AdjacencyList[neighborIndex];
+                    var tmpVertex = _graph[neighborIndex];
 
                     if (tmpVertex.IsVisited())
                         continue;
@@ -63,8 +63,8 @@ namespace GraphsAlgorithms.Algorithms {
         }
 
         private List<double> GetDistances() {
-            var distances = new List<double>(_graph.AdjacencyList.Count);
-            for (int i = 0; i < _graph.AdjacencyList.Count; i++) {
+            var distances = new List<double>(_graph.Count);
+            for (int i = 0; i < _graph.Count; i++) {
                 distances.Add(double.MaxValue);
             }
             distances[_startIndex] = 0;
@@ -74,7 +74,7 @@ namespace GraphsAlgorithms.Algorithms {
         private SimplePriorityQueue<Vertex, double> GetPriorityQueue(List<double> distances) {
             var priorityQueue = new SimplePriorityQueue<Vertex, double>();
 
-            foreach (var vertex in _graph.AdjacencyList) {
+            foreach (var vertex in _graph) {
                 priorityQueue.Enqueue(vertex, distances[vertex.Index]);
             }
             return priorityQueue;

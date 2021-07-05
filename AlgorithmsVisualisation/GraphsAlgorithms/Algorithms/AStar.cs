@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GraphsAlgorithms.GraphModel;
 using GraphsAlgorithms.Result;
+using Priority_Queue;
 
 namespace GraphsAlgorithms.Algorithms {
     public class AStar : IPathFindingAlgorithm {
@@ -15,7 +16,14 @@ namespace GraphsAlgorithms.Algorithms {
         }
 
         public AlgorithmResult Execute() {
-            throw new System.NotImplementedException();
+            List<Frame> frames = new();
+
+            var openSet = new SimplePriorityQueue<Vertex, double>();
+            // openSet.Enqueue(_graph)
+
+            return new AlgorithmResult() {
+                Frames = frames
+            };
         }
 
         private static double GetHeuristicFunctionValue(Vertex start, Vertex end) =>

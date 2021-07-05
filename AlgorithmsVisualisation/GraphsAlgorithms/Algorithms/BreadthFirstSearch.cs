@@ -21,7 +21,7 @@ namespace GraphsAlgorithms.Algorithms {
             List<Frame> frames = new();
 
             var queue = new Queue<Vertex>();
-            queue.Enqueue(_graph.AdjacencyList[_startIndex]);
+            queue.Enqueue(_graph[_startIndex]);
 
             while (queue.Count > 0) {
                 var vertex = queue.Dequeue();
@@ -45,10 +45,10 @@ namespace GraphsAlgorithms.Algorithms {
                             Frames = frames
                         };
 
-                    if (_graph.AdjacencyList[neighborIndex].IsVisited())
+                    if (_graph[neighborIndex].IsVisited())
                         continue;
 
-                    var tmpVertex = _graph.AdjacencyList[neighborIndex];
+                    var tmpVertex = _graph[neighborIndex];
 
                     frame.AddOpenSetVertexFrameElement(tmpVertex);
 
