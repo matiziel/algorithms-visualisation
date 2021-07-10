@@ -21,40 +21,45 @@ namespace GraphsAlgorithms.Algorithms {
             var distances = GetDistances();
             var priorityQueue = GetPriorityQueue(distances);
 
-            while (priorityQueue.Count > 0) {
-                var vertex = priorityQueue.Dequeue();
+            var cameFrom = new Dictionary<int, int>();
 
-                if (vertex.IsVisited())
+            while (priorityQueue.Count > 0) {
+                var current = priorityQueue.Dequeue();
+
+                if (current.Index == _endIndex) {
+                    frames.AddPathFrame(_graph, cameFrom.ReconstructPath(_startIndex, current.Index));
+                    break;
+                }
+
+                if (current.IsVisited())
                     continue;
 
-                vertex.Visit();
+                current.Visit();
 
-                if (vertex.Index != _startIndex)
-                    frames.AddVisitedVertexFrame(vertex);
+                if (current.Index != _startIndex)
+                    frames.AddVisitedVertexFrame(current);
 
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
                 };
 
-                foreach (int neighborIndex in vertex.Edges.Keys) {
+                foreach (int neighborIndex in current.Edges.Keys) {
+                    var neighbor = _graph[neighborIndex];
 
-                    if (neighborIndex == _endIndex)
-                        return new AlgorithmResult() {
-                            Frames = frames
-                        };
-                    var tmpVertex = _graph[neighborIndex];
-
-                    if (tmpVertex.IsVisited())
+                    if (neighbor.IsVisited())
                         continue;
 
-                    var tmp = distances[vertex.Index] + vertex.Edges[neighborIndex];
+                    var tmp = distances[current.Index] + current.Edges[neighborIndex];
                     if (tmp < distances[neighborIndex]) {
-                        distances[neighborIndex] = tmp;
-                        priorityQueue.UpdatePriority(tmpVertex, distances[neighborIndex]);
-                    }
+                        cameFrom[neighborIndex] = current.Index;
 
-                    frame.AddOpenSetVertexFrameElement(tmpVertex);
+                        distances[neighborIndex] = tmp;
+                        priorityQueue.UpdatePriority(neighbor, distances[neighborIndex]);
+                    }
+                    if (neighborIndex != _endIndex)
+                        frame.AddOpenSetVertexFrameElement(neighbor);
                 }
+
                 frames.Add(frame);
             }
             return new AlgorithmResult() {

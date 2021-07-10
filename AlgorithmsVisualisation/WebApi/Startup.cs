@@ -16,36 +16,27 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Contracts.Services;
 using Application;
 
-namespace WebApi
-{
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
+namespace WebApi {
+    public class Startup {
+        public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
+        public static void ConfigureServices(IServiceCollection services) {
             services.AddSingleton<IGraphBuilder, GraphBuilder>();
             services.AddSingleton<IAlgorithmFactory, AlgorithmFactory>();
             services.AddSingleton<IAlgorithmExecutor, AlgorithmExecutor>();
-            
+
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
+            services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));

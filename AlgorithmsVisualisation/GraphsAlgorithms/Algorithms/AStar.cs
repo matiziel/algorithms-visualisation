@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GraphsAlgorithms.Extensions;
 using GraphsAlgorithms.GraphModel;
 using GraphsAlgorithms.Result;
 using Priority_Queue;
@@ -18,16 +19,81 @@ namespace GraphsAlgorithms.Algorithms {
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
 
-            var openSet = new SimplePriorityQueue<Vertex, double>();
-            // openSet.Enqueue(_graph)
+            var gScore = GetDistances(
+                valueForStart: 0.0
+            );
+            var fScore = GetDistances(
+                valueForStart: HeuristicFunction(_graph[_startIndex])
+            );
 
+            var cameFrom = new Dictionary<int, int>();
+
+            var openSet = new SimplePriorityQueue<Vertex, double>();
+            openSet.Enqueue(_graph[_startIndex], fScore[_startIndex]);
+
+            while (openSet.Count > 0) {
+                var current = openSet.Dequeue();
+
+                if (current.Index == _endIndex) {
+                    frames.AddPathFrame(_graph, cameFrom.ReconstructPath(_startIndex, current.Index));
+                    break;
+                }
+
+                if (current.IsVisited())
+                    continue;
+
+                current.Visit();
+
+                if (current.Index != _startIndex)
+                    frames.AddVisitedVertexFrame(current);
+
+                var frame = new Frame() {
+                    FrameElements = new List<FrameElement>()
+                };
+                foreach (int neighborIndex in current.Edges.Keys) {
+                    var neighbor = _graph[neighborIndex];
+
+                    if (neighbor.IsVisited())
+                        continue;
+
+                    var tentativeGScore = gScore[current.Index] + current.Edges[neighborIndex];
+
+                    if (tentativeGScore < gScore[neighborIndex]) {
+                        cameFrom[neighborIndex] = current.Index;
+
+                        gScore[neighborIndex] = tentativeGScore;
+                        fScore[neighborIndex] = gScore[neighborIndex] + HeuristicFunction(neighbor);
+
+                        if (openSet.Contains(neighbor))
+                            openSet.UpdatePriority(neighbor, fScore[neighborIndex]);
+                        else
+                            openSet.Enqueue(neighbor, fScore[neighborIndex]);
+                    }
+                    if (neighborIndex != _endIndex)
+                        frame.AddOpenSetVertexFrameElement(neighbor);
+                }
+
+                frames.Add(frame);
+            }
             return new AlgorithmResult() {
                 Frames = frames
             };
         }
 
-        private static double GetHeuristicFunctionValue(Vertex start, Vertex end) =>
-            Math.Sqrt((end.X - start.X) * (end.X - start.X) + (end.Y - start.Y) * (end.Y - start.Y));
+        private List<double> GetDistances(double valueForStart) {
+            var distances = new List<double>(_graph.Count);
+            for (int i = 0; i < _graph.Count; i++) {
+                distances.Add(double.MaxValue);
+            }
+            distances[_startIndex] = valueForStart;
+            return distances;
+        }
 
+        private double HeuristicFunction(Vertex start) {
+            var end = _graph[_endIndex];
+            return Math.Sqrt(
+                (end.X - start.X) * (end.X - start.X) + (end.Y - start.Y) * (end.Y - start.Y)
+            );
+        }
     }
 }

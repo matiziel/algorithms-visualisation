@@ -2,9 +2,10 @@ import Utils from '../Utils.js';
 import Animation from '../animation/Animation.js';
 import AnimationState from '../animation/AnimationState.js';
 import VertexState from '../animation/VertexState.js';
+import AlgorithmType from '../animation/AlgorithmType.js';
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
@@ -15,6 +16,8 @@ const VertexColour = (state) => {
             return "#ffffff";
         case VertexState.Disabled:
             return "#707070";
+        case VertexState.Path:
+            return "#74c1ec";
         case VertexState.OpenSet:
             return "#77cf56";
         case VertexState.Visited:
@@ -64,7 +67,7 @@ function Grid(props) {
             return;
 
         if (animation.GetState() === AnimationState.Init) {
-            await animation.SetFrames(grid, 3);
+            await animation.SetFrames(grid, AlgorithmType.Dijkstra);
             console.log(animation.frames);
         }
 

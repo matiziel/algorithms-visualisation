@@ -23,5 +23,30 @@ namespace GraphsAlgorithms.Extensions {
             );
         }
 
+        public static void AddPathFrame(this List<Frame> frames, Graph graph, List<int> path) {
+            var frame = new Frame {
+                FrameElements = new()
+            };
+            foreach (var index in path) {
+                frame.FrameElements.Add(
+                    new FrameElement() {
+                        X = graph[index].X, Y = graph[index].Y, State = GridElementState.Path
+                    }
+                );
+            }
+            frames.Add(frame);
+        }
+
+        public static List<int> ReconstructPath(this Dictionary<int, int> cameFrom, int start, int current) {
+            List<int> totalPath = new();
+
+            while (cameFrom.ContainsKey(current)) {
+                current = cameFrom[current];
+                if (current != start)
+                    totalPath.Insert(0, current);
+            }
+            return totalPath;
+        }
+
     }
 }
