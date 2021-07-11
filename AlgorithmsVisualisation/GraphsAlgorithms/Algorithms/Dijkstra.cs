@@ -36,12 +36,12 @@ namespace GraphsAlgorithms.Algorithms {
 
                 current.Visit();
 
-                if (current.Index != _startIndex)
-                    frames.AddVisitedVertexFrame(current);
-
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
                 };
+                if (current.Index != _startIndex)
+                    frame.AddVisitedVertexFrameElement(current);
+
 
                 foreach (int neighborIndex in current.Edges.Keys) {
                     var neighbor = _graph[neighborIndex];

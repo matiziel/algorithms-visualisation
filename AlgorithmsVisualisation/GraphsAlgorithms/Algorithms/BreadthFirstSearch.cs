@@ -21,39 +21,40 @@ namespace GraphsAlgorithms.Algorithms {
             List<Frame> frames = new();
 
             var queue = new Queue<Vertex>();
+
+            _graph[_startIndex].Visit();
             queue.Enqueue(_graph[_startIndex]);
 
+            var cameFrom = new Dictionary<int, int>();
+
             while (queue.Count > 0) {
-                var vertex = queue.Dequeue();
+                var current = queue.Dequeue();
 
-                if (vertex.IsVisited())
-                    continue;
+                if (current.Index == _endIndex) {
+                    frames.AddPathFrame(_graph, cameFrom.ReconstructPath(_startIndex, current.Index));
+                    break;
+                }
 
-                vertex.Visit();
 
-                if (vertex.Index != _startIndex)
-                    frames.AddVisitedVertexFrame(vertex);
 
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
                 };
+                if (current.Index != _startIndex)
+                    frame.AddVisitedVertexFrameElement(current);
 
-                foreach (int neighborIndex in vertex.Edges.Keys) {
-
-                    if (neighborIndex == _endIndex)
-                        return new AlgorithmResult() {
-                            Frames = frames
-                        };
+                foreach (int neighborIndex in current.Edges.Keys) {
+                    var neighbor = _graph[neighborIndex];
 
                     if (_graph[neighborIndex].IsVisited())
                         continue;
 
-                    var tmpVertex = _graph[neighborIndex];
+                    if (neighborIndex != _endIndex)
+                        frame.AddOpenSetVertexFrameElement(neighbor);
 
-                    frame.AddOpenSetVertexFrameElement(tmpVertex);
-
-                    queue.Enqueue(tmpVertex);
-
+                    cameFrom[neighborIndex] = current.Index;
+                    neighbor.Visit();
+                    queue.Enqueue(neighbor);
                 }
                 frames.Add(frame);
             }

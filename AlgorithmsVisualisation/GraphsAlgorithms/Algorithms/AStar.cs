@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Common;
 using GraphsAlgorithms.Extensions;
 using GraphsAlgorithms.GraphModel;
 using GraphsAlgorithms.Result;
@@ -42,14 +43,15 @@ namespace GraphsAlgorithms.Algorithms {
                 if (current.IsVisited())
                     continue;
 
-                current.Visit();
 
-                if (current.Index != _startIndex)
-                    frames.AddVisitedVertexFrame(current);
+                current.Visit();
 
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
                 };
+                if (current.Index != _startIndex)
+                    frame.AddVisitedVertexFrameElement(current);
+
                 foreach (int neighborIndex in current.Edges.Keys) {
                     var neighbor = _graph[neighborIndex];
 
