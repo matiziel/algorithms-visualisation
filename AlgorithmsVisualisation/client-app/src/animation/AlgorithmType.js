@@ -1,7 +1,7 @@
 const AlgorithmType = {
     AStar: 0,
     BreadthFirstSearch: 1,
-    DepthFirstSearch: 2,
+    BestFirstSearch: 2,
     Dijkstra: 3
 }
 

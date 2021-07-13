@@ -5,35 +5,39 @@ using GraphsAlgorithms.GraphModel;
 using GraphsAlgorithms.Result;
 using Common;
 using GraphsAlgorithms.Extensions;
+using Priority_Queue;
 
 namespace GraphsAlgorithms.Algorithms {
-    public class BreadthFirstSearch : IPathFindingAlgorithm {
+    public class BestFirstSearch : IPathFindingAlgorithm {
+
         private readonly Graph _graph;
         private readonly int _startIndex;
         private readonly int _endIndex;
-        public BreadthFirstSearch(Graph graph, int startIndex, int endIndex) {
+        public BestFirstSearch(Graph graph, int startIndex, int endIndex) {
             _graph = graph;
             _startIndex = startIndex;
             _endIndex = endIndex;
         }
-
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
 
-            var queue = new Queue<Vertex>();
-
-            _graph[_startIndex].Visit();
-            queue.Enqueue(_graph[_startIndex]);
-
             var cameFrom = new Dictionary<int, int>();
 
-            while (queue.Count > 0) {
-                var current = queue.Dequeue();
+            var openSet = new SimplePriorityQueue<Vertex, double>();
+            openSet.Enqueue(_graph[_startIndex], HeuristicFunction(_graph[_startIndex]));
+
+            while (openSet.Count > 0) {
+                var current = openSet.Dequeue();
 
                 if (current.Index == _endIndex) {
                     frames.AddPathFrame(_graph, cameFrom.ReconstructPath(_startIndex, current.Index));
                     break;
                 }
+
+                if (current.IsVisited())
+                    continue;
+
+                current.Visit();
 
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
@@ -44,25 +48,32 @@ namespace GraphsAlgorithms.Algorithms {
                 foreach (int neighborIndex in current.Edges.Keys) {
                     var neighbor = _graph[neighborIndex];
 
-                    if (_graph[neighborIndex].IsVisited())
+                    if (neighbor.IsVisited())
                         continue;
+
+                    if (!openSet.Contains(neighbor)) {
+                        openSet.Enqueue(neighbor, HeuristicFunction(neighbor));
+                        cameFrom[neighborIndex] = current.Index;
+                    }
+
+
+
 
                     if (neighborIndex != _endIndex)
                         frame.AddOpenSetVertexFrameElement(neighbor);
-
-                    cameFrom[neighborIndex] = current.Index;
-                    neighbor.Visit();
-                    queue.Enqueue(neighbor);
                 }
                 frames.Add(frame);
             }
-
-
             return new AlgorithmResult() {
                 Frames = frames
             };
         }
 
-
+        private double HeuristicFunction(Vertex start) {
+            var end = _graph[_endIndex];
+            return Math.Sqrt(
+                (end.X - start.X) * (end.X - start.X) + (end.Y - start.Y) * (end.Y - start.Y)
+            );
+        }
     }
 }

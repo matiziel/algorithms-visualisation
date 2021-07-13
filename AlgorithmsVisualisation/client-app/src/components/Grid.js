@@ -67,7 +67,7 @@ function Grid(props) {
             return;
 
         if (animation.GetState() === AnimationState.Init) {
-            await animation.SetFrames(grid, AlgorithmType.AStar);
+            await animation.SetFrames(grid, AlgorithmType.BestFirstSearch);
             console.log(animation.frames);
         }
 
