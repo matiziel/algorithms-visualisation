@@ -7,14 +7,16 @@ using Contracts.Services;
 using GraphsAlgorithms.GraphModel;
 using Contracts.Extensions;
 using Application.Models;
+using GraphsAlgorithms.Metrics;
 
 namespace Application {
     public class GraphBuilder : IGraphBuilder {
-        public Graph BuildGraphFromGrid(List<List<int>> grid) {
+        public Graph BuildGraphFromGrid(List<List<int>> grid, MetricType metricType) {
             if (grid.Count == 0)
                 throw new ArgumentException("Grid cannot be empty");
 
             var gridModel = new GridModel(grid);
+            var metric = GetMetric(metricType);
 
             List<Vertex> adjacencyList = new(gridModel.Width * gridModel.Height);
 
@@ -25,13 +27,19 @@ namespace Application {
 
                     var vertex = new Vertex(x * gridModel.Height + y, x, y);
                     if (!CheckIfDisabled(gridModel[x, y])) {
-                        vertex.FillEdges(gridModel.GetVertexEdges(x, y));
+                        vertex.FillEdges(gridModel.GetVertexEdges(x, y, metric.VertexDiagonalDistance));
                     }
                     adjacencyList.Add(vertex);
                 }
             }
-
-            return new Graph(adjacencyList);
+            return new Graph(adjacencyList, metric);
+        }
+        private static IMetric GetMetric(MetricType metricType) {
+            return metricType switch {
+                MetricType.Euclidean => new Euclidean(),
+                MetricType.Manhattan => new Manhattan(),
+                _ => throw new ArgumentException("Given metric does not exist")
+            };
         }
         private static bool CheckIfDisabled(int value) =>
             (GridElementState)value == GridElementState.Disabled;

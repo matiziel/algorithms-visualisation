@@ -8,6 +8,6 @@ namespace Contracts.DataTransferObjects {
         public List<List<int>> GridArray { get; set; }
         public int Start { get; set; }
         public int End { get; set; }
-
+        public MetricType MetricType { get; set; }
     }
 }

@@ -67,7 +67,7 @@ function Grid(props) {
             return;
 
         if (animation.GetState() === AnimationState.Init) {
-            await animation.SetFrames(grid, AlgorithmType.BestFirstSearch);
+            await animation.SetFrames(grid, AlgorithmType.AStar);
             console.log(animation.frames);
         }
 
@@ -112,7 +112,8 @@ function Grid(props) {
                     Utils.range(0, props.gridWidth).map(xarg =>
                         Utils.range(0, props.gridHeight).map(yarg => (
                             <rect x={xarg * props.size} y={yarg * props.size} width={props.size} height={props.size}
-                                fill={VertexColour(grid[xarg][yarg])} stroke="#000" strokeOpacity="0.2" onClick={disableVertex}>
+                                fill={VertexColour(grid[xarg][yarg])} stroke="#000" strokeOpacity="0.2"
+                                onClick={disableVertex}>
                             </rect>
                         ))
                     )

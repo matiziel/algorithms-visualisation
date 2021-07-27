@@ -24,7 +24,7 @@ namespace GraphsAlgorithms.Algorithms {
                 valueForStart: 0.0
             );
             var fScore = GetDistances(
-                valueForStart: HeuristicFunction(_graph[_startIndex])
+                valueForStart: HeuristicFunction(_startIndex)
             );
 
             var cameFrom = new Dictionary<int, int>();
@@ -64,7 +64,7 @@ namespace GraphsAlgorithms.Algorithms {
                         cameFrom[neighborIndex] = current.Index;
 
                         gScore[neighborIndex] = tentativeGScore;
-                        fScore[neighborIndex] = gScore[neighborIndex] + HeuristicFunction(neighbor);
+                        fScore[neighborIndex] = gScore[neighborIndex] + HeuristicFunction(neighborIndex);
 
                         if (openSet.Contains(neighbor))
                             openSet.UpdatePriority(neighbor, fScore[neighborIndex]);
@@ -91,11 +91,7 @@ namespace GraphsAlgorithms.Algorithms {
             return distances;
         }
 
-        private double HeuristicFunction(Vertex start) {
-            var end = _graph[_endIndex];
-            return Math.Sqrt(
-                (end.X - start.X) * (end.X - start.X) + (end.Y - start.Y) * (end.Y - start.Y)
-            );
-        }
+        private double HeuristicFunction(int start) =>
+            _graph.GetDistance(start, _endIndex);
     }
 }

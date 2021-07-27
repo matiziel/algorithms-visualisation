@@ -9,7 +9,8 @@ const ApiClient = {
                 {
                     GridArray: grid,
                     Start: startIndex,
-                    End: endIndex
+                    End: endIndex,
+                    MetricType: 0
                 }
             );
             console.log(result.data.frames);

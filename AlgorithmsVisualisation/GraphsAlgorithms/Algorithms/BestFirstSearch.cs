@@ -24,7 +24,7 @@ namespace GraphsAlgorithms.Algorithms {
             var cameFrom = new Dictionary<int, int>();
 
             var openSet = new SimplePriorityQueue<Vertex, double>();
-            openSet.Enqueue(_graph[_startIndex], HeuristicFunction(_graph[_startIndex]));
+            openSet.Enqueue(_graph[_startIndex], HeuristicFunction(_startIndex));
 
             while (openSet.Count > 0) {
                 var current = openSet.Dequeue();
@@ -52,7 +52,7 @@ namespace GraphsAlgorithms.Algorithms {
                         continue;
 
                     if (!openSet.Contains(neighbor)) {
-                        openSet.Enqueue(neighbor, HeuristicFunction(neighbor));
+                        openSet.Enqueue(neighbor, HeuristicFunction(neighborIndex));
                         cameFrom[neighborIndex] = current.Index;
                     }
 
@@ -69,11 +69,7 @@ namespace GraphsAlgorithms.Algorithms {
             };
         }
 
-        private double HeuristicFunction(Vertex start) {
-            var end = _graph[_endIndex];
-            return Math.Sqrt(
-                (end.X - start.X) * (end.X - start.X) + (end.Y - start.Y) * (end.Y - start.Y)
-            );
-        }
+        private double HeuristicFunction(int start) =>
+            _graph.GetDistance(start, _endIndex);
     }
 }

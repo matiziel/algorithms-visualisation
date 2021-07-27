@@ -17,7 +17,7 @@ namespace Application.Models {
 
         public int this[int x, int y] => _gridArray[x][y];
 
-        public Dictionary<int, double> GetVertexEdges(int x, int y) {
+        public Dictionary<int, double> GetVertexEdges(int x, int y, double vertexDiagonalDistance) {
             Dictionary<int, double> edges = new();
             if ((GridElementState)_gridArray[x][y] == GridElementState.Disabled)
                 throw new ArgumentException("Cannot add edges to disabled vertex");
@@ -29,19 +29,19 @@ namespace Application.Models {
                 if (y == 0) {
                     AddEdge(edges, x + 1, y, 1.0);
                     AddEdge(edges, x, y + 1, 1.0);
-                    AddEdge(edges, x + 1, y + 1, Math.Sqrt(2));
+                    AddEdge(edges, x + 1, y + 1, vertexDiagonalDistance);
                 }
                 else if (y == height - 1) {
                     AddEdge(edges, x + 1, y, 1.0);
                     AddEdge(edges, x, y - 1, 1.0);
-                    AddEdge(edges, x + 1, y - 1, Math.Sqrt(2));
+                    AddEdge(edges, x + 1, y - 1, vertexDiagonalDistance);
                 }
                 else {
                     AddEdge(edges, x, y + 1, 1.0);
                     AddEdge(edges, x, y - 1, 1.0);
                     AddEdge(edges, x + 1, y, 1.0);
-                    AddEdge(edges, x + 1, y - 1, Math.Sqrt(2));
-                    AddEdge(edges, x + 1, y + 1, Math.Sqrt(2));
+                    AddEdge(edges, x + 1, y - 1, vertexDiagonalDistance);
+                    AddEdge(edges, x + 1, y + 1, vertexDiagonalDistance);
 
                 }
             }
@@ -49,48 +49,46 @@ namespace Application.Models {
                 if (y == 0) {
                     AddEdge(edges, x - 1, y, 1.0);
                     AddEdge(edges, x, y + 1, 1.0);
-                    AddEdge(edges, x - 1, y + 1, Math.Sqrt(2));
+                    AddEdge(edges, x - 1, y + 1, vertexDiagonalDistance);
                 }
                 else if (y == height - 1) {
                     AddEdge(edges, x - 1, y, 1.0);
                     AddEdge(edges, x, y - 1, 1.0);
-                    AddEdge(edges, x - 1, y - 1, Math.Sqrt(2));
+                    AddEdge(edges, x - 1, y - 1, vertexDiagonalDistance);
                 }
                 else {
                     AddEdge(edges, x, y + 1, 1.0);
                     AddEdge(edges, x, y - 1, 1.0);
                     AddEdge(edges, x - 1, y, 1.0);
-                    AddEdge(edges, x - 1, y - 1, Math.Sqrt(2));
-                    AddEdge(edges, x - 1, y + 1, Math.Sqrt(2));
+                    AddEdge(edges, x - 1, y - 1, vertexDiagonalDistance);
+                    AddEdge(edges, x - 1, y + 1, vertexDiagonalDistance);
                 }
             }
             else if (y == 0) {
                 AddEdge(edges, x, y + 1, 1.0);
                 AddEdge(edges, x - 1, y, 1.0);
                 AddEdge(edges, x + 1, y, 1.0);
-                AddEdge(edges, x - 1, y + 1, Math.Sqrt(2));
-                AddEdge(edges, x + 1, y + 1, Math.Sqrt(2));
+                AddEdge(edges, x - 1, y + 1, vertexDiagonalDistance);
+                AddEdge(edges, x + 1, y + 1, vertexDiagonalDistance);
             }
             else if (y == height - 1) {
                 AddEdge(edges, x, y - 1, 1.0);
                 AddEdge(edges, x - 1, y, 1.0);
                 AddEdge(edges, x + 1, y, 1.0);
-                AddEdge(edges, x - 1, y - 1, Math.Sqrt(2));
-                AddEdge(edges, x + 1, y - 1, Math.Sqrt(2));
+                AddEdge(edges, x - 1, y - 1, vertexDiagonalDistance);
+                AddEdge(edges, x + 1, y - 1, vertexDiagonalDistance);
             }
             else {
                 AddEdge(edges, x + 1, y, 1.0);
-                AddEdge(edges, x + 1, y - 1, Math.Sqrt(2));
-                AddEdge(edges, x + 1, y + 1, Math.Sqrt(2));
+                AddEdge(edges, x + 1, y - 1, vertexDiagonalDistance);
+                AddEdge(edges, x + 1, y + 1, vertexDiagonalDistance);
 
                 AddEdge(edges, x - 1, y, 1.0);
-                AddEdge(edges, x - 1, y - 1, Math.Sqrt(2));
-                AddEdge(edges, x - 1, y + 1, Math.Sqrt(2));
+                AddEdge(edges, x - 1, y - 1, vertexDiagonalDistance);
+                AddEdge(edges, x - 1, y + 1, vertexDiagonalDistance);
 
                 AddEdge(edges, x, y - 1, 1.0);
                 AddEdge(edges, x, y + 1, 1.0);
-
-
             }
             return edges;
         }
