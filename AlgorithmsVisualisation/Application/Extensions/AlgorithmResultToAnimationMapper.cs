@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Contracts.DataTransferObjects;
 using GraphsAlgorithms.Result;
 
 namespace Application.Extensions {
     public static class AlgorithmResultExtensions {
-        public static Animation MapToAnimation(this AlgorithmResult algorithmResult) {
+        public static Animation CreateAnimation(this AlgorithmResult algorithmResult, TimeSpan timeSpan) {
             Animation animation = new();
             animation.Frames = new List<List<List<int>>>(algorithmResult.Frames.Count);
 
@@ -18,6 +19,7 @@ namespace Application.Extensions {
                     );
                 }
             }
+            animation.Time = timeSpan.TotalSeconds;
             return animation;
         }
 
