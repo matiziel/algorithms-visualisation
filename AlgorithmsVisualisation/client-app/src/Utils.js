@@ -8,9 +8,9 @@ const Utils = {
         for (let i = 0; i < width; ++i) {
             grid[i] = Array(heigth);
             for (let k = 0; k < heigth; ++k) {
-                if (i == 5 && k == 16)
+                if (i === 5 && k === 16)
                     grid[i][k] = VertexState.Begin;
-                else if (i == 19 && k == 16)
+                else if (i === 19 && k === 16)
                     grid[i][k] = VertexState.End;
                 else
                     grid[i][k] = VertexState.Blank;

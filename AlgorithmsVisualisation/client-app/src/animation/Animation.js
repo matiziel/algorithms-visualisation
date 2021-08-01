@@ -31,7 +31,7 @@ class Animation {
     SetStartPoint(x, y) {
         this.startIndex = x * this.height + y;
     }
-    SetStartPoint(x, y) {
+    SetEndPoint(x, y) {
         this.endIndex = x * this.height + y;
     }
     async SetFrames(grid, type) {
@@ -40,12 +40,19 @@ class Animation {
     SetRandomFrames(amount) {
         this.frames = Utils.getRandomFrames(amount);
     }
-    Step(iteration) {
-        return this.frames[iteration];
-    }
     Reset() {
         this.state = AnimationState.Init;
         this.currentFrame = 0;
+    }
+    Step(grid) {
+        let frame = this.frames[this.currentFrame];
+        for (let i = 0; i < frame.length; ++i) {
+            let x = frame[i][0];
+            let y = frame[i][1];
+            grid[x][y] = frame[i][2];
+        }
+        this.currentFrame += 1;
+        return grid;
     }
 
 

@@ -6,7 +6,8 @@ import AlgorithmType from '../animation/AlgorithmType.js';
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import DrawingHandler from '../drawing/DrawingHandler.js';
+import DrawingState from '../drawing/DrawingState.js';
 
 
 
@@ -33,10 +34,11 @@ const VertexColour = (state) => {
 
 function Grid(props) {
 
-    const [animation, setAnimation] = useState(new Animation(props.gridWidth, props.gridHeight))
+    const [animation, setAnimation] = useState(new Animation(props.gridWidth, props.gridHeight));
+    const [drawingHandler, setDrawingHandler] = useState(new DrawingHandler());
     const [grid, setGrid] = useState([...animation.GetEmptyGrid()]);
 
-    let frameTime = 1;
+    const frameTime = 1;
 
     useEffect(() => {
         const fetchData = () => {
@@ -44,22 +46,66 @@ function Grid(props) {
         fetchData();
     }, [grid, animation]);
 
-    const disableVertex = (e) => {
+    const handleMouseDown = (e) => {
         if (animation.GetState() !== AnimationState.Init)
             return;
 
-        let xarg = parseInt(e.target.getAttribute("x")) / props.size;
-        let yarg = parseInt(e.target.getAttribute("y")) / props.size;
-        if (grid[xarg][yarg] === VertexState.Begin || grid[xarg][yarg] === VertexState.End)
+        let xarg = computeCoordinateX(e);
+        let yarg = computeCoordinateY(e);
+        let newGraph = [...grid];
+
+        if (grid[xarg][yarg] === VertexState.Begin) {
+            drawingHandler.SetState(DrawingState.MovingBegin);
+        }
+        else if (grid[xarg][yarg] === VertexState.End) {
+            drawingHandler.SetState(DrawingState.MovingEnd);
+        }
+        else if (grid[xarg][yarg] === VertexState.Disabled) {
+            drawingHandler.SetState(DrawingState.ErasingWalls);
+            newGraph[xarg][yarg] = VertexState.Blank;
+        }
+        else {
+            drawingHandler.SetState(DrawingState.DrawingWalls);
+            newGraph[xarg][yarg] = VertexState.Disabled;
+        }
+        setGrid(newGraph);
+    }
+
+    const handleMouseEnter = (e) => {
+        if (animation.GetState() !== AnimationState.Init)
             return;
 
-        let newGraph = [...grid];
-        if (grid[xarg][yarg] === VertexState.Disabled)
-            newGraph[xarg][yarg] = VertexState.Blank
-        else
-            newGraph[xarg][yarg] = VertexState.Disabled;
+        if (drawingHandler.GetState() === DrawingState.None)
+            return;
 
+        let xarg = computeCoordinateX(e);
+        let yarg = computeCoordinateY(e);
+        let newGraph = [...grid];
+
+        if (drawingHandler.GetState() === DrawingState.MovingBegin) {
+
+        }
+        else if (drawingHandler.GetState() === DrawingState.MovingEnd) {
+
+        }
+        else if (drawingHandler.GetState() === DrawingState.ErasingWalls) {
+            newGraph[xarg][yarg] = VertexState.Blank;
+        }
+        else if (drawingHandler.GetState() === DrawingState.DrawingWalls) {
+            newGraph[xarg][yarg] = VertexState.Disabled;
+        }
         setGrid(newGraph);
+    }
+
+    const handleMouseUp = (e) => {
+        drawingHandler.SetState(DrawingState.None);
+    }
+
+    const computeCoordinateX = (e) => {
+        return parseInt(e.target.getAttribute("x")) / props.size;
+    }
+    const computeCoordinateY = (e) => {
+        return parseInt(e.target.getAttribute("y")) / props.size;
     }
 
     const runAlgorithm = async (e) => {
@@ -68,33 +114,19 @@ function Grid(props) {
 
         if (animation.GetState() === AnimationState.Init) {
             await animation.SetFrames(grid, AlgorithmType.AStar);
-            console.log(animation.frames);
         }
-
 
         animation.SetState(AnimationState.Run);
 
         for (let i = animation.currentFrame; i < animation.frames.length; ++i) {
-
             if (animation.GetState() === AnimationState.Pause)
                 return;
-            step(animation.frames[i]);
+
+            setGrid(animation.Step([...grid]));
 
             await Utils.sleep(frameTime);
         }
         animation.SetState(AnimationState.Init);
-
-    }
-
-    const step = (frame) => {
-        let newGrid = [...grid];
-        for (let i = 0; i < frame.length; ++i) {
-            let x = frame[i][0];
-            let y = frame[i][1];
-            newGrid[x][y] = frame[i][2];
-        }
-        setGrid(newGrid);
-        animation.currentFrame += 1;
     }
 
     const pauseAlgorithm = (e) => {
@@ -113,7 +145,10 @@ function Grid(props) {
                         Utils.range(0, props.gridHeight).map(yarg => (
                             <rect x={xarg * props.size} y={yarg * props.size} width={props.size} height={props.size}
                                 fill={VertexColour(grid[xarg][yarg])} stroke="#000" strokeOpacity="0.2"
-                                onClick={disableVertex}>
+                                onMouseDown={handleMouseDown}
+                                onMouseEnter={handleMouseEnter}
+                                onMouseUp={handleMouseUp}
+                            >
                             </rect>
                         ))
                     )
