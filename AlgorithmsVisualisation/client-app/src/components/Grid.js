@@ -9,8 +9,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import DrawingHandler from '../drawing/DrawingHandler.js';
 import DrawingState from '../drawing/DrawingState.js';
 
-
-
 const VertexColour = (state) => {
     switch (state) {
         case VertexState.Blank:
@@ -34,9 +32,9 @@ const VertexColour = (state) => {
 
 function Grid(props) {
 
-    const [animation, setAnimation] = useState(new Animation(props.gridWidth, props.gridHeight));
-    const [drawingHandler, setDrawingHandler] = useState(new DrawingHandler());
-    const [grid, setGrid] = useState([...animation.GetEmptyGrid()]);
+    const [animation, setAnimation] = useState(new Animation());
+    const [drawingHandler, setDrawingHandler] = useState(new DrawingHandler(props.size, props.gridWidth, props.gridHeight));
+    const [grid, setGrid] = useState([...animation.GetEmptyGrid(props.gridWidth, props.gridHeight)]);
 
     const frameTime = 1;
 
@@ -47,32 +45,21 @@ function Grid(props) {
     }, [grid, animation]);
 
     const handleMouseDown = (e) => {
-        if (animation.GetState() !== AnimationState.Init)
+        if (!animation.HasInitState())
             return;
 
         let xarg = computeCoordinateX(e);
         let yarg = computeCoordinateY(e);
+
         let newGraph = [...grid];
 
-        if (grid[xarg][yarg] === VertexState.Begin) {
-            drawingHandler.SetState(DrawingState.MovingBegin);
-        }
-        else if (grid[xarg][yarg] === VertexState.End) {
-            drawingHandler.SetState(DrawingState.MovingEnd);
-        }
-        else if (grid[xarg][yarg] === VertexState.Disabled) {
-            drawingHandler.SetState(DrawingState.ErasingWalls);
-            newGraph[xarg][yarg] = VertexState.Blank;
-        }
-        else {
-            drawingHandler.SetState(DrawingState.DrawingWalls);
-            newGraph[xarg][yarg] = VertexState.Disabled;
-        }
+        newGraph[xarg][yarg] = drawingHandler.HandleMouseDown(grid[xarg][yarg]);
+
         setGrid(newGraph);
     }
 
     const handleMouseEnter = (e) => {
-        if (animation.GetState() !== AnimationState.Init)
+        if (!animation.HasInitState())
             return;
 
         if (drawingHandler.GetState() === DrawingState.None)
@@ -82,17 +69,36 @@ function Grid(props) {
         let yarg = computeCoordinateY(e);
         let newGraph = [...grid];
 
-        if (drawingHandler.GetState() === DrawingState.MovingBegin) {
 
+
+        if (drawingHandler.GetState() === DrawingState.MovingBegin) {
+            let oldStartX = getX(drawingHandler.GetStartIndex());
+            let oldStartY = getY(drawingHandler.GetStartIndex());
+
+            if (newGraph[xarg][yarg] != VertexState.End) {
+                newGraph[oldStartX][oldStartY] = VertexState.Blank;
+                newGraph[xarg][yarg] = VertexState.Begin;
+                drawingHandler.start = xarg * props.gridHeight + yarg;
+            }
         }
         else if (drawingHandler.GetState() === DrawingState.MovingEnd) {
 
+            let oldEndX = getX(drawingHandler.GetEndIndex());
+            let oldEndY = getY(drawingHandler.GetEndIndex());
+
+            if (newGraph[xarg][yarg] != VertexState.Begin) {
+                newGraph[oldEndX][oldEndY] = VertexState.Blank;
+                newGraph[xarg][yarg] = VertexState.End;
+                drawingHandler.end = xarg * props.gridHeight + yarg;
+            }
         }
         else if (drawingHandler.GetState() === DrawingState.ErasingWalls) {
-            newGraph[xarg][yarg] = VertexState.Blank;
+            if (newGraph[xarg][yarg] !== VertexState.Begin && newGraph[xarg][yarg] !== VertexState.End)
+                newGraph[xarg][yarg] = VertexState.Blank;
         }
         else if (drawingHandler.GetState() === DrawingState.DrawingWalls) {
-            newGraph[xarg][yarg] = VertexState.Disabled;
+            if (newGraph[xarg][yarg] !== VertexState.Begin && newGraph[xarg][yarg] !== VertexState.End)
+                newGraph[xarg][yarg] = VertexState.Disabled;
         }
         setGrid(newGraph);
     }
@@ -104,25 +110,34 @@ function Grid(props) {
     const computeCoordinateX = (e) => {
         return parseInt(e.target.getAttribute("x")) / props.size;
     }
+
     const computeCoordinateY = (e) => {
         return parseInt(e.target.getAttribute("y")) / props.size;
     }
 
-    const runAlgorithm = async (e) => {
-        if (animation.GetState() !== AnimationState.Init && animation.GetState() !== AnimationState.Pause)
+    const getX = (index) => {
+        return Math.trunc(index / props.gridHeight);
+    }
+
+    const getY = (index) => {
+        return index % props.gridHeight;
+    }
+
+    const runAlgorithm = async () => {
+        if (!animation.CanRun())
             return;
 
-        if (animation.GetState() === AnimationState.Init) {
-            await animation.SetFrames(grid, AlgorithmType.AStar);
+        if (animation.HasInitState()) {
+            await animation.SetFrames(grid, AlgorithmType.AStar,
+                drawingHandler.GetStartIndex(), drawingHandler.GetEndIndex());
         }
-
         animation.SetState(AnimationState.Run);
 
         for (let i = animation.currentFrame; i < animation.frames.length; ++i) {
             if (animation.GetState() === AnimationState.Pause)
                 return;
 
-            setGrid(animation.Step([...grid]));
+            setGrid(animation.Step(grid));
 
             await Utils.sleep(frameTime);
         }
@@ -135,8 +150,9 @@ function Grid(props) {
 
     const clearGrid = (e) => {
         animation.Reset();
-        setGrid([...animation.GetEmptyGrid()]);
+        setGrid([...animation.GetEmptyGrid(props.gridWidth, props.gridHeight)]);
     }
+
     return (
         <div>
             <svg height={props.gridHeight * props.size} width={props.gridWidth * props.size}>

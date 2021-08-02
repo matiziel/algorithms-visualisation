@@ -6,21 +6,13 @@ class Animation {
     state;
     currentFrame;
     frames;
-    width;
-    height;
-    startIndex;
-    endIndex;
-    constructor(width, height) {
+    constructor() {
         this.state = AnimationState.Init;
         this.currentFrame = 0;
         this.frames = [];
-        this.width = width;
-        this.height = height;
-        this.startIndex = 176;
-        this.endIndex = 624;
     }
-    GetEmptyGrid() {
-        return Utils.getGrid(this.width, this.height);
+    GetEmptyGrid(width, height) {
+        return Utils.getGrid(width, height);
     }
     GetState() {
         return this.state;
@@ -28,34 +20,30 @@ class Animation {
     SetState(state) {
         this.state = state;
     }
-    SetStartPoint(x, y) {
-        this.startIndex = x * this.height + y;
-    }
-    SetEndPoint(x, y) {
-        this.endIndex = x * this.height + y;
-    }
-    async SetFrames(grid, type) {
-        this.frames = await ApiClient.getAlgorithm(grid, this.startIndex, this.endIndex, type)
-    }
-    SetRandomFrames(amount) {
-        this.frames = Utils.getRandomFrames(amount);
+    async SetFrames(grid, type, startIndex, endIndex) {
+        this.frames = await ApiClient.getAlgorithm(grid, startIndex, endIndex, type)
     }
     Reset() {
         this.state = AnimationState.Init;
         this.currentFrame = 0;
     }
     Step(grid) {
+        let newGrid = [...grid];
         let frame = this.frames[this.currentFrame];
         for (let i = 0; i < frame.length; ++i) {
             let x = frame[i][0];
             let y = frame[i][1];
-            grid[x][y] = frame[i][2];
+            newGrid[x][y] = frame[i][2];
         }
         this.currentFrame += 1;
-        return grid;
+        return newGrid;
     }
-
-
+    HasInitState() {
+        return this.GetState() === AnimationState.Init;
+    }
+    CanRun() {
+        return this.HasInitState() || this.GetState() === AnimationState.Pause;
+    }
 }
 
 export default Animation;
