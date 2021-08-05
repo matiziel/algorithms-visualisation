@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const ApiClient = {
     apiUrl: (path) => ('/api' + path),
-    getAlgorithm: async function (grid, startIndex, endIndex, type) {
+    getAlgorithm: async function (grid, type, startIndex, endIndex) {
         try {
             const result = await axios.post(
                 this.apiUrl('/PathFindingAlgorithms/' + type),
@@ -13,7 +13,6 @@ const ApiClient = {
                     MetricType: 0
                 }
             );
-            console.log(result.data.frames);
             return result.data.frames;
 
         }
