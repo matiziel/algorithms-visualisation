@@ -1,7 +1,8 @@
 import Utils from '../Utils.js';
 import AnimationState from './AnimationState.js';
 import ApiClient from '../ApiClient.js';
-import VertexState from './VertexState.js';
+import VertexState from '../algorithm/VertexState.js';
+import AlgorithmType from '../algorithm/AlgorithmType.js';
 
 class Animation {
     state;
@@ -11,6 +12,7 @@ class Animation {
     height;
     start;
     end;
+    algorithmType;
 
     constructor(width, height) {
         this.state = AnimationState.Init;
@@ -20,6 +22,7 @@ class Animation {
         this.frames = [];
         this.start = 176;
         this.end = 624;
+        this.algorithmType = AlgorithmType.AStar;
     }
 
     GetEmptyGrid() {
@@ -42,8 +45,16 @@ class Animation {
         return grid;
     }
 
-    async SetFrames(grid, type) {
-        this.frames = await ApiClient.getAlgorithm(grid, type, this.start, this.end);
+    async SetFrames(grid) {
+        this.frames = await ApiClient.getAlgorithm(grid, this.algorithmType, this.start, this.end);
+    }
+
+    SetAlgorithmType(type) {
+        this.algorithmType = type;
+    }
+
+    GetAlgorithmType() {
+        return this.algorithmType;
     }
 
     Reset() {

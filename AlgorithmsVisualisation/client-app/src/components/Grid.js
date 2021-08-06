@@ -1,10 +1,10 @@
 import Utils from '../Utils.js';
 import Animation from '../animation/Animation.js';
 import AnimationState from '../animation/AnimationState.js';
-import VertexState from '../animation/VertexState.js';
-import AlgorithmType from '../animation/AlgorithmType.js';
+import AlgorithmType from '../algorithm/AlgorithmType.js';
+import AlgorithmName from '../algorithm/AlgorithmName.js';
 import React, { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DrawingHandler from '../drawing/DrawingHandler.js';
 import DrawingState from '../drawing/DrawingState.js';
@@ -15,7 +15,7 @@ function Grid(props) {
     const [animation, setAnimation] = useState(new Animation(props.gridWidth, props.gridHeight));
     const [drawingHandler, setDrawingHandler] = useState(new DrawingHandler(props.size));
     const [grid, setGrid] = useState([...animation.GetEmptyGrid()]);
-
+    const [algorithmSettings, setAlgorithmName] = useState(AlgorithmName.AStar)
     const frameTime = 1;
 
     useEffect(() => {
@@ -62,7 +62,7 @@ function Grid(props) {
             return;
 
         if (animation.HasInitState()) {
-            await animation.SetFrames(grid, AlgorithmType.AStar);
+            await animation.SetFrames(grid);
         }
         animation.SetState(AnimationState.Run);
 
@@ -86,6 +86,15 @@ function Grid(props) {
         setGrid([...animation.GetEmptyGrid(props.gridWidth, props.gridHeight)]);
     }
 
+    const clearPath = (e) => {
+        
+    }
+
+    const handleSelectAlgorithm = (eventKey, event) => {
+        animation.SetAlgorithmType(eventKey);
+        setAlgorithmName(event.target.text);
+    }
+
     return (
         <div>
             <svg height={props.gridHeight * props.size} width={props.gridWidth * props.size}>
@@ -107,6 +116,25 @@ function Grid(props) {
             <Button className="btn btn-primary" onClick={runAlgorithm}>Run</Button>
             <Button className="btn btn-primary" onClick={pauseAlgorithm}>Pause</Button>
             <Button className="btn btn-primary" onClick={clearGrid}>Clear</Button>
+            <Button className="btn btn-primary" onClick={clearPath}>Clear Path</Button>
+            <DropdownButton
+                title={algorithmName}
+                id="dropdown-menu-align-right"
+                onSelect={handleSelectAlgorithm}>
+                <Dropdown.Item eventKey={AlgorithmType.AStar}>{AlgorithmName.AStar}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.BreadthFirstSearch}>{AlgorithmName.BreadthFirstSearch}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.BestFirstSearch}>{AlgorithmName.BestFirstSearch}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.Dijkstra}>{AlgorithmName.Dijkstra}</Dropdown.Item>
+            </DropdownButton>
+            <DropdownButton
+                title={algorithmName}
+                id="dropdown-menu-align-right"
+                onSelect={handleSelectAlgorithm}>
+                <Dropdown.Item eventKey={AlgorithmType.AStar}>{AlgorithmName.AStar}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.BreadthFirstSearch}>{AlgorithmName.BreadthFirstSearch}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.BestFirstSearch}>{AlgorithmName.BestFirstSearch}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.Dijkstra}>{AlgorithmName.Dijkstra}</Dropdown.Item>
+            </DropdownButton>
         </div>
     );
 }

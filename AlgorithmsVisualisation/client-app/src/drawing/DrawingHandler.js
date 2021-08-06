@@ -1,5 +1,5 @@
 import DrawingState from "./DrawingState";
-import VertexState from '../animation/VertexState.js';
+import VertexState from '../algorithm/VertexState.js';
 
 class DrawingHandler {
     state;
