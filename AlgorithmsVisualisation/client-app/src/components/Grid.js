@@ -15,7 +15,7 @@ function Grid(props) {
     const [animation, setAnimation] = useState(new Animation(props.gridWidth, props.gridHeight));
     const [drawingHandler, setDrawingHandler] = useState(new DrawingHandler(props.size));
     const [grid, setGrid] = useState([...animation.GetEmptyGrid()]);
-    const [algorithmSettings, setAlgorithmName] = useState(AlgorithmName.AStar)
+    const [algorithmName, setAlgorithmName] = useState(AlgorithmName.AStar)
     const frameTime = 1;
 
     useEffect(() => {
@@ -87,10 +87,15 @@ function Grid(props) {
     }
 
     const clearPath = (e) => {
-        
+
     }
 
     const handleSelectAlgorithm = (eventKey, event) => {
+        animation.SetAlgorithmType(eventKey);
+        setAlgorithmName(event.target.text);
+    }
+
+    const handleSelectMetric = (eventKey, event) => {
         animation.SetAlgorithmType(eventKey);
         setAlgorithmName(event.target.text);
     }

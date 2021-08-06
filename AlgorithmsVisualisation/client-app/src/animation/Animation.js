@@ -3,6 +3,7 @@ import AnimationState from './AnimationState.js';
 import ApiClient from '../ApiClient.js';
 import VertexState from '../algorithm/VertexState.js';
 import AlgorithmType from '../algorithm/AlgorithmType.js';
+import MetricType from '../algorithm/MetricType.js';
 
 class Animation {
     state;
@@ -13,6 +14,7 @@ class Animation {
     start;
     end;
     algorithmType;
+    metricType;
 
     constructor(width, height) {
         this.state = AnimationState.Init;
@@ -23,6 +25,7 @@ class Animation {
         this.start = 176;
         this.end = 624;
         this.algorithmType = AlgorithmType.AStar;
+        this.metricType = MetricType.Euclidean;
     }
 
     GetEmptyGrid() {
@@ -46,16 +49,12 @@ class Animation {
     }
 
     async SetFrames(grid) {
-        this.frames = await ApiClient.getAlgorithm(grid, this.algorithmType, this.start, this.end);
+        this.frames = await ApiClient.getAlgorithm(grid, this.start, this.end, this.algorithmType, this.metricType);
     }
 
-    SetAlgorithmType(type) {
-        this.algorithmType = type;
-    }
+    SetAlgorithmType = (type) => this.algorithmType = type;
 
-    GetAlgorithmType() {
-        return this.algorithmType;
-    }
+    GetAlgorithmType = () => this.algorithmType;
 
     Reset() {
         this.state = AnimationState.Init;
@@ -74,51 +73,36 @@ class Animation {
         return newGrid;
     }
 
-    HasInitState() {
-        return this.GetState() === AnimationState.Init;
-    }
+    HasInitState = () => this.GetState() === AnimationState.Init;
 
-    CanRun() {
-        return this.HasInitState() || this.GetState() === AnimationState.Pause;
-    }
+    CanRun = () => this.HasInitState() || this.GetState() === AnimationState.Pause;
 
-    GetState() {
-        return this.state;
-    }
+    GetState = () => this.state;
 
-    SetState(state) {
-        this.state = state;
-    }
+    SetState = (state) => this.state = state;
 
     GetStart() {
         return {
-            x: this.getX(this.start),
-            y: this.getY(this.start)
+            x: this.GetX(this.start),
+            y: this.GetY(this.start)
         };
-    }
-
-    SetStart(x, y) {
-        this.start = x * this.height + y;
     }
 
     GetEnd() {
         return {
-            x: this.getX(this.end),
-            y: this.getY(this.end)
+            x: this.GetX(this.end),
+            y: this.GetY(this.end)
         };
     }
 
-    SetEnd(x, y) {
-        this.end = x * this.height + y;
-    }
+    SetStart = (x, y) => this.start = x * this.height + y;
 
-    getX(index) {
-        return Math.trunc(index / this.height);
-    }
+    SetEnd = (x, y) => this.end = x * this.height + y;
 
-    getY(index) {
-        return index % this.height;
-    }
+    GetX = (index) => Math.trunc(index / this.height);
+
+    GetY = (index) => index % this.height;
+
 }
 
 export default Animation;

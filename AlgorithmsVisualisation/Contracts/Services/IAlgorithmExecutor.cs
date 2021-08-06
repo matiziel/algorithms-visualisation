@@ -4,6 +4,6 @@ using GraphsAlgorithms.Result;
 
 namespace Contracts.Services {
     public interface IAlgorithmExecutor {
-        Animation Execute(Grid grid, AlgorithmType type);
+        Animation Execute(Grid grid);
     }
 }

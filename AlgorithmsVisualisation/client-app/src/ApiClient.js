@@ -5,16 +5,16 @@ const ApiClient = {
     getAlgorithm: async function (grid, startIndex, endIndex, algorithmType, metricType) {
         try {
             const result = await axios.post(
-                this.apiUrl('/PathFindingAlgorithms/' + algorithmType),
+                this.apiUrl('/PathFindingAlgorithms'),
                 {
                     GridArray: grid,
                     Start: startIndex,
                     End: endIndex,
-                    MetricType: metricType
+                    AlgorithmType: algorithmType,
+                    MetricType: metricType,
                 }
             );
             return result.data.frames;
-
         }
         catch (error) {
             return [];

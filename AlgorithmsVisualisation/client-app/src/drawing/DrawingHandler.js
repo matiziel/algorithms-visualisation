@@ -8,18 +8,14 @@ class DrawingHandler {
         this.state = DrawingState.None;
         this.size = size;
     }
-    GetStartIndex() {
-        return this.start;
-    }
-    GetEndIndex() {
-        return this.end;
-    }
-    SetState(state) {
-        this.state = state;
-    }
-    GetState() {
-        return this.state;
-    }
+    GetStartIndex = () => this.start;
+
+    GetEndIndex = () => this.end;
+
+    SetState = (state) => this.state = state;
+
+    GetState = () => this.state;
+
     HandleMouseDown(value) {
         if (value === VertexState.Begin) {
             this.SetState(DrawingState.MovingBegin);
@@ -90,9 +86,6 @@ class DrawingHandler {
         }
     }
 
-    ComputeCoordinate(name, e) {
-        return parseInt(e.target.getAttribute(name)) / this.size;
-    }
-
+    ComputeCoordinate = (name, e) => parseInt(e.target.getAttribute(name)) / this.size;
 }
 export default DrawingHandler;

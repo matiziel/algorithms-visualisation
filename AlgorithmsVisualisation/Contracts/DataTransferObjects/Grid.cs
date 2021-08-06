@@ -9,5 +9,6 @@ namespace Contracts.DataTransferObjects {
         public int Start { get; set; }
         public int End { get; set; }
         public MetricType MetricType { get; set; }
+        public AlgorithmType AlgorithmType { get; set; }
     }
 }

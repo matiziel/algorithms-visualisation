@@ -17,9 +17,9 @@ namespace Application {
             _timeCounter = timeCounter;
         }
 
-        public Animation Execute(Grid grid, AlgorithmType type) {
+        public Animation Execute(Grid grid) {
             var graph = _builder.BuildGraphFromGrid(grid.GridArray, grid.MetricType);
-            var algorithm = _factory.Create(graph, grid.Start, grid.End, type);
+            var algorithm = _factory.Create(graph, grid.Start, grid.End, grid.AlgorithmType);
             (TimeSpan timeSpan, AlgorithmResult algorithmResult) = _timeCounter.Time(
                 () => algorithm.Execute()
             );

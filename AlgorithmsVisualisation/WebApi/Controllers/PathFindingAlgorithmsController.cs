@@ -15,12 +15,10 @@ namespace WebApi.Controllers {
             _executor = executor;
         }
 
-        [HttpPost("{type:int}")]
-        public ActionResult Execute(int type, [FromBody] Grid grid) {
+        [HttpPost]
+        public ActionResult Execute([FromBody] Grid grid) {
             try {
-                if (!Enum.IsDefined(typeof(AlgorithmType), type))
-                    return NotFound();
-                return Ok(_executor.Execute(grid, (AlgorithmType)type));
+                return Ok(_executor.Execute(grid));
             }
             catch (Exception) {
                 return BadRequest();
