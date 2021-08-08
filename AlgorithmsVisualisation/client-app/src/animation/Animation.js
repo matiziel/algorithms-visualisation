@@ -48,6 +48,20 @@ class Animation {
         return grid;
     }
 
+    GetGridWithoutPath(grid) {
+        for (let i = 0; i < this.width; ++i) {
+            for (let k = 0; k < this.height; ++k) {
+                let val = grid[i][k];
+                let isPath = val !== VertexState.Begin
+                    && val !== VertexState.End
+                    && val !== VertexState.Disabled;
+                if (isPath)
+                    grid[i][k] = VertexState.Blank;
+            }
+        }
+        return grid;
+    }
+
     async SetFrames(grid) {
         this.frames = await ApiClient.getAlgorithm(grid, this.start, this.end, this.algorithmType, this.metricType);
     }
@@ -55,6 +69,10 @@ class Animation {
     SetAlgorithmType = (type) => this.algorithmType = type;
 
     GetAlgorithmType = () => this.algorithmType;
+
+    SetMetricType = (type) => this.metricType = type;
+
+    GetMetricType = () => this.metricType;
 
     Reset() {
         this.state = AnimationState.Init;

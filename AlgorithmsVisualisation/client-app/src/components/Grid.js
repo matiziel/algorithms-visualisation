@@ -2,27 +2,28 @@ import Utils from '../Utils.js';
 import Animation from '../animation/Animation.js';
 import AnimationState from '../animation/AnimationState.js';
 import AlgorithmType from '../algorithm/AlgorithmType.js';
-import AlgorithmName from '../algorithm/AlgorithmName.js';
 import React, { useState, useEffect } from 'react';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DrawingHandler from '../drawing/DrawingHandler.js';
 import DrawingState from '../drawing/DrawingState.js';
 import Coordinates from '../drawing/Coordinates.js';
+import AlgorithmSettings from '../algorithm/AlgorithmSettings.js';
+import MetricType from '../algorithm/MetricType.js';
 
 function Grid(props) {
 
     const [animation, setAnimation] = useState(new Animation(props.gridWidth, props.gridHeight));
     const [drawingHandler, setDrawingHandler] = useState(new DrawingHandler(props.size));
     const [grid, setGrid] = useState([...animation.GetEmptyGrid()]);
-    const [algorithmName, setAlgorithmName] = useState(AlgorithmName.AStar)
+    const [algorithmSettings, setAlgorithmSettings] = useState(new AlgorithmSettings())
     const frameTime = 1;
 
     useEffect(() => {
         const fetchData = () => {
         };
         fetchData();
-    }, [grid, animation]);
+    }, [grid, animation, drawingHandler, algorithmSettings]);
 
     const handleMouseDown = (e) => {
         if (!animation.HasInitState())
@@ -83,21 +84,24 @@ function Grid(props) {
 
     const clearGrid = (e) => {
         animation.Reset();
-        setGrid([...animation.GetEmptyGrid(props.gridWidth, props.gridHeight)]);
+        setGrid(animation.GetEmptyGrid());
     }
 
     const clearPath = (e) => {
-
+        animation.Reset();
+        setGrid(animation.GetGridWithoutPath([...grid]))
     }
 
-    const handleSelectAlgorithm = (eventKey, event) => {
-        animation.SetAlgorithmType(eventKey);
-        setAlgorithmName(event.target.text);
+    const handleSelectAlgorithm = (e) => {
+        let value = parseInt(e);
+        animation.SetAlgorithmType(value);
+        setAlgorithmSettings(prev => prev.SetAlgorithm(value));
     }
 
-    const handleSelectMetric = (eventKey, event) => {
-        animation.SetAlgorithmType(eventKey);
-        setAlgorithmName(event.target.text);
+    const handleSelectMetric = (e) => {
+        let value = parseInt(e);
+        animation.SetMetricType(value);
+        setAlgorithmSettings(prev => prev.SetMetric(value));
     }
 
     return (
@@ -122,23 +126,23 @@ function Grid(props) {
             <Button className="btn btn-primary" onClick={pauseAlgorithm}>Pause</Button>
             <Button className="btn btn-primary" onClick={clearGrid}>Clear</Button>
             <Button className="btn btn-primary" onClick={clearPath}>Clear Path</Button>
+
             <DropdownButton
-                title={algorithmName}
+                title={algorithmSettings.GetCurrentAlgorithmName()}
                 id="dropdown-menu-align-right"
                 onSelect={handleSelectAlgorithm}>
-                <Dropdown.Item eventKey={AlgorithmType.AStar}>{AlgorithmName.AStar}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.BreadthFirstSearch}>{AlgorithmName.BreadthFirstSearch}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.BestFirstSearch}>{AlgorithmName.BestFirstSearch}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.Dijkstra}>{AlgorithmName.Dijkstra}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.AStar}>{algorithmSettings.GetAlgorithmName(AlgorithmType.AStar)}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.BreadthFirstSearch}>{algorithmSettings.GetAlgorithmName(AlgorithmType.BreadthFirstSearch)}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.BestFirstSearch}>{algorithmSettings.GetAlgorithmName(AlgorithmType.BestFirstSearch)}</Dropdown.Item>
+                <Dropdown.Item eventKey={AlgorithmType.Dijkstra}>{algorithmSettings.GetAlgorithmName(AlgorithmType.Dijkstra)}</Dropdown.Item>
             </DropdownButton>
+
             <DropdownButton
-                title={algorithmName}
+                title={algorithmSettings.GetCurrentMetricName()}
                 id="dropdown-menu-align-right"
-                onSelect={handleSelectAlgorithm}>
-                <Dropdown.Item eventKey={AlgorithmType.AStar}>{AlgorithmName.AStar}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.BreadthFirstSearch}>{AlgorithmName.BreadthFirstSearch}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.BestFirstSearch}>{AlgorithmName.BestFirstSearch}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.Dijkstra}>{AlgorithmName.Dijkstra}</Dropdown.Item>
+                onSelect={handleSelectMetric}>
+                <Dropdown.Item eventKey={MetricType.Euclidean}>{algorithmSettings.GetMetricName(MetricType.Euclidean)}</Dropdown.Item>
+                <Dropdown.Item eventKey={MetricType.Manhattan}>{algorithmSettings.GetMetricName(MetricType.Manhattan)}</Dropdown.Item>
             </DropdownButton>
         </div>
     );
