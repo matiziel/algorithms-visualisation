@@ -19,6 +19,7 @@ namespace GraphsAlgorithms.Algorithms {
 
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
+            int pathLength = 0;
 
             var queue = new Queue<Vertex>();
 
@@ -31,7 +32,9 @@ namespace GraphsAlgorithms.Algorithms {
                 var current = queue.Dequeue();
 
                 if (current.Index == _endIndex) {
-                    frames.AddPathFrame(_graph, cameFrom.ReconstructPath(_startIndex, current.Index));
+                    var path = cameFrom.ReconstructPath(_startIndex, current.Index);
+                    pathLength = path.Count;
+                    frames.AddPathFrame(_graph, path);
                     break;
                 }
 
@@ -59,7 +62,8 @@ namespace GraphsAlgorithms.Algorithms {
 
 
             return new AlgorithmResult() {
-                Frames = frames
+                Frames = frames,
+                PathLength = pathLength
             };
         }
 

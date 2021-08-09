@@ -19,6 +19,7 @@ namespace GraphsAlgorithms.Algorithms {
 
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
+            int pathLength = 0;
 
             var gScore = GetDistances(
                 valueForStart: 0.0
@@ -36,7 +37,9 @@ namespace GraphsAlgorithms.Algorithms {
                 var current = openSet.Dequeue();
 
                 if (current.Index == _endIndex) {
-                    frames.AddPathFrame(_graph, cameFrom.ReconstructPath(_startIndex, current.Index));
+                    var path = cameFrom.ReconstructPath(_startIndex, current.Index);
+                    pathLength = path.Count;
+                    frames.AddPathFrame(_graph, path);
                     break;
                 }
 
@@ -78,7 +81,8 @@ namespace GraphsAlgorithms.Algorithms {
                 frames.Add(frame);
             }
             return new AlgorithmResult() {
-                Frames = frames
+                Frames = frames,
+                PathLength = pathLength
             };
         }
 

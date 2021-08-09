@@ -5,7 +5,7 @@ using GraphsAlgorithms.Result;
 
 namespace Application.Extensions {
     public static class AlgorithmResultExtensions {
-        public static Animation CreateAnimation(this AlgorithmResult algorithmResult, TimeSpan timeSpan) {
+        public static Animation CreateAnimation(this AlgorithmResult algorithmResult) {
             Animation animation = new();
             animation.Frames = new List<List<List<int>>>(algorithmResult.Frames.Count);
 
@@ -19,7 +19,8 @@ namespace Application.Extensions {
                     );
                 }
             }
-            animation.Time = timeSpan.TotalSeconds;
+            animation.Time = algorithmResult.TimeSpan.TotalSeconds;
+            animation.PathLength = algorithmResult.PathLength;
             return animation;
         }
 

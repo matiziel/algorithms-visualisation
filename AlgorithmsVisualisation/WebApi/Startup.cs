@@ -28,8 +28,6 @@ namespace WebApi {
             services.AddSingleton<IGraphBuilder, GraphBuilder>();
             services.AddSingleton<IAlgorithmFactory, AlgorithmFactory>();
             services.AddSingleton<IAlgorithmExecutor, AlgorithmExecutor>();
-            services.AddSingleton<ITimeCounter, TimeCounter>();
-
 
             services.AddControllers();
             services.AddSwaggerGen(c => {

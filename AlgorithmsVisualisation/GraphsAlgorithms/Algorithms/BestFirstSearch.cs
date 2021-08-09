@@ -20,8 +20,10 @@ namespace GraphsAlgorithms.Algorithms {
         }
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
+            int pathLength = 0;
 
             var cameFrom = new Dictionary<int, int>();
+
 
             var openSet = new SimplePriorityQueue<Vertex, double>();
             openSet.Enqueue(_graph[_startIndex], HeuristicFunction(_startIndex));
@@ -30,7 +32,9 @@ namespace GraphsAlgorithms.Algorithms {
                 var current = openSet.Dequeue();
 
                 if (current.Index == _endIndex) {
-                    frames.AddPathFrame(_graph, cameFrom.ReconstructPath(_startIndex, current.Index));
+                    var path = cameFrom.ReconstructPath(_startIndex, current.Index);
+                    pathLength = path.Count;
+                    frames.AddPathFrame(_graph, path);
                     break;
                 }
 
@@ -56,16 +60,14 @@ namespace GraphsAlgorithms.Algorithms {
                         cameFrom[neighborIndex] = current.Index;
                     }
 
-
-
-
                     if (neighborIndex != _endIndex)
                         frame.AddOpenSetVertexFrameElement(neighbor);
                 }
                 frames.Add(frame);
             }
             return new AlgorithmResult() {
-                Frames = frames
+                Frames = frames,
+                PathLength = pathLength
             };
         }
 
