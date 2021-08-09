@@ -28,6 +28,7 @@ namespace Application {
                     var vertex = new Vertex(x * gridModel.Height + y, x, y);
                     if (!CheckIfDisabled(gridModel[x, y])) {
                         vertex.FillEdges(gridModel.GetVertexEdges(x, y, metric.VertexDiagonalDistance));
+                        // vertex.FillEdges(gridModel.GetVertexEdges(x, y, Math.Sqrt(2.0)));
                     }
                     adjacencyList.Add(vertex);
                 }

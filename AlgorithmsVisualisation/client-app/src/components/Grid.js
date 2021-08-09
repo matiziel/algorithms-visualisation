@@ -10,13 +10,15 @@ import DrawingState from '../drawing/DrawingState.js';
 import Coordinates from '../drawing/Coordinates.js';
 import AlgorithmSettings from '../algorithm/AlgorithmSettings.js';
 import MetricType from '../algorithm/MetricType.js';
+import ButtonsVisibility from './ButtonsVisibility.js';
 
 function Grid(props) {
 
     const [animation, setAnimation] = useState(new Animation(props.gridWidth, props.gridHeight));
     const [drawingHandler, setDrawingHandler] = useState(new DrawingHandler(props.size));
     const [grid, setGrid] = useState([...animation.GetEmptyGrid()]);
-    const [algorithmSettings, setAlgorithmSettings] = useState(new AlgorithmSettings())
+    const [algorithmSettings, setAlgorithmSettings] = useState(new AlgorithmSettings());
+    const [buttonsVisibility, setButtonsVisibility] = useState(new ButtonsVisibility());
     const frameTime = 1;
 
     useEffect(() => {
@@ -66,6 +68,7 @@ function Grid(props) {
             await animation.SetFrames(grid);
         }
         animation.SetState(AnimationState.Run);
+        setButtonsVisibility(prev => prev.Run());
 
         for (let i = animation.currentFrame; i < animation.frames.length; ++i) {
             if (animation.GetState() === AnimationState.Pause)
@@ -76,19 +79,24 @@ function Grid(props) {
             await Utils.sleep(frameTime);
         }
         animation.SetState(AnimationState.Init);
+        setButtonsVisibility(prev => prev.Init());
     }
 
     const pauseAlgorithm = (e) => {
         animation.SetState(AnimationState.Pause);
+        setButtonsVisibility(prev => prev.Pause());
+
     }
 
     const clearGrid = (e) => {
         animation.Reset();
+        setButtonsVisibility(prev => prev.Init());
         setGrid(animation.GetEmptyGrid());
     }
 
     const clearPath = (e) => {
         animation.Reset();
+        setButtonsVisibility(prev => prev.Init());
         setGrid(animation.GetGridWithoutPath([...grid]))
     }
 
@@ -122,13 +130,14 @@ function Grid(props) {
                 }
             </svg>
             <br></br>
-            <Button className="btn btn-primary" onClick={runAlgorithm}>Run</Button>
-            <Button className="btn btn-primary" onClick={pauseAlgorithm}>Pause</Button>
-            <Button className="btn btn-primary" onClick={clearGrid}>Clear</Button>
-            <Button className="btn btn-primary" onClick={clearPath}>Clear Path</Button>
+            <Button className="btn btn-primary" disabled={!buttonsVisibility.GetRun()} onClick={runAlgorithm}>Run</Button>
+            <Button className="btn btn-primary" disabled={!buttonsVisibility.GetPause()} onClick={pauseAlgorithm}>Pause</Button>
+            <Button className="btn btn-primary" disabled={!buttonsVisibility.GetClear()} onClick={clearGrid}>Clear</Button>
+            <Button className="btn btn-primary" disabled={!buttonsVisibility.GetClearPath()} onClick={clearPath}>Clear Path</Button>
 
             <DropdownButton
                 title={algorithmSettings.GetCurrentAlgorithmName()}
+                disabled={!buttonsVisibility.GetAlgorithmSettings()}
                 id="dropdown-menu-align-right"
                 onSelect={handleSelectAlgorithm}>
                 <Dropdown.Item eventKey={AlgorithmType.AStar}>{algorithmSettings.GetAlgorithmName(AlgorithmType.AStar)}</Dropdown.Item>
@@ -139,6 +148,7 @@ function Grid(props) {
 
             <DropdownButton
                 title={algorithmSettings.GetCurrentMetricName()}
+                disabled={!buttonsVisibility.GetAlgorithmSettings()}
                 id="dropdown-menu-align-right"
                 onSelect={handleSelectMetric}>
                 <Dropdown.Item eventKey={MetricType.Euclidean}>{algorithmSettings.GetMetricName(MetricType.Euclidean)}</Dropdown.Item>
