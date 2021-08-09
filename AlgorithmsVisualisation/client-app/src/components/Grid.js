@@ -79,7 +79,7 @@ function Grid(props) {
             await Utils.sleep(frameTime);
         }
         animation.SetState(AnimationState.Init);
-        setButtonsVisibility(prev => prev.Init());
+        setButtonsVisibility(prev => prev.Init(algorithmSettings.GetAlgorithm()));
     }
 
     const pauseAlgorithm = (e) => {
@@ -90,13 +90,13 @@ function Grid(props) {
 
     const clearGrid = (e) => {
         animation.Reset();
-        setButtonsVisibility(prev => prev.Init());
+        setButtonsVisibility(prev => prev.Init(algorithmSettings.GetAlgorithm()));
         setGrid(animation.GetEmptyGrid());
     }
 
     const clearPath = (e) => {
         animation.Reset();
-        setButtonsVisibility(prev => prev.Init());
+        setButtonsVisibility(prev => prev.Init(algorithmSettings.GetAlgorithm()));
         setGrid(animation.GetGridWithoutPath([...grid]))
     }
 
@@ -104,6 +104,7 @@ function Grid(props) {
         let value = parseInt(e);
         animation.SetAlgorithmType(value);
         setAlgorithmSettings(prev => prev.SetAlgorithm(value));
+        setButtonsVisibility(prev => prev.AlgorithmChange(value));
     }
 
     const handleSelectMetric = (e) => {
@@ -111,6 +112,12 @@ function Grid(props) {
         animation.SetMetricType(value);
         setAlgorithmSettings(prev => prev.SetMetric(value));
     }
+    var test = {
+        AStar: 0,
+        BreadthFirstSearch: 1,
+        BestFirstSearch: 2,
+        Dijkstra: 3
+    };
 
     return (
         <div>
@@ -135,24 +142,31 @@ function Grid(props) {
             <Button className="btn btn-primary" disabled={!buttonsVisibility.GetClear()} onClick={clearGrid}>Clear</Button>
             <Button className="btn btn-primary" disabled={!buttonsVisibility.GetClearPath()} onClick={clearPath}>Clear Path</Button>
 
+            <br></br>
+            <label>Algorithm:</label>
             <DropdownButton
                 title={algorithmSettings.GetCurrentAlgorithmName()}
                 disabled={!buttonsVisibility.GetAlgorithmSettings()}
                 id="dropdown-menu-align-right"
                 onSelect={handleSelectAlgorithm}>
-                <Dropdown.Item eventKey={AlgorithmType.AStar}>{algorithmSettings.GetAlgorithmName(AlgorithmType.AStar)}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.BreadthFirstSearch}>{algorithmSettings.GetAlgorithmName(AlgorithmType.BreadthFirstSearch)}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.BestFirstSearch}>{algorithmSettings.GetAlgorithmName(AlgorithmType.BestFirstSearch)}</Dropdown.Item>
-                <Dropdown.Item eventKey={AlgorithmType.Dijkstra}>{algorithmSettings.GetAlgorithmName(AlgorithmType.Dijkstra)}</Dropdown.Item>
+                {
+                    Object.values(AlgorithmType).map(item =>
+                        <Dropdown.Item eventKey={item}>{algorithmSettings.GetAlgorithmName(item)}</Dropdown.Item>
+                    )
+                }
             </DropdownButton>
 
+            <label>Heuristic:</label>
             <DropdownButton
                 title={algorithmSettings.GetCurrentMetricName()}
-                disabled={!buttonsVisibility.GetAlgorithmSettings()}
+                disabled={!buttonsVisibility.GetHeuristicSettings()}
                 id="dropdown-menu-align-right"
                 onSelect={handleSelectMetric}>
-                <Dropdown.Item eventKey={MetricType.Euclidean}>{algorithmSettings.GetMetricName(MetricType.Euclidean)}</Dropdown.Item>
-                <Dropdown.Item eventKey={MetricType.Manhattan}>{algorithmSettings.GetMetricName(MetricType.Manhattan)}</Dropdown.Item>
+                {
+                    Object.values(MetricType).map(item =>
+                        <Dropdown.Item eventKey={item}>{algorithmSettings.GetMetricName(item)}</Dropdown.Item>
+                    )
+                }
             </DropdownButton>
         </div>
     );

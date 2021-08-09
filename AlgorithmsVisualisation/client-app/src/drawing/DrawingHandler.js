@@ -39,16 +39,16 @@ class DrawingHandler {
 
             let oldStart = animation.GetStart();
 
-            if (newGrid[xarg][yarg] != VertexState.End && newGrid[xarg][yarg] != VertexState.Disabled) {
+            if (newGrid[xarg][yarg] !== VertexState.End && newGrid[xarg][yarg] !== VertexState.Disabled) {
                 newGrid[oldStart.x][oldStart.y] = VertexState.Blank;
                 newGrid[xarg][yarg] = VertexState.Begin;
                 animation.SetStart(xarg, yarg);
             }
         }
-        else if (this.state === DrawingState.MovingEnd && newGrid[xarg][yarg] != VertexState.Disabled) {
+        else if (this.state === DrawingState.MovingEnd && newGrid[xarg][yarg] !== VertexState.Disabled) {
             let oldEnd = animation.GetEnd();
 
-            if (newGrid[xarg][yarg] != VertexState.Begin) {
+            if (newGrid[xarg][yarg] !== VertexState.Begin) {
                 newGrid[oldEnd.x][oldEnd.y] = VertexState.Blank;
                 newGrid[xarg][yarg] = VertexState.End;
                 animation.SetEnd(xarg, yarg);
