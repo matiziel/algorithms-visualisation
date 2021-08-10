@@ -19,6 +19,7 @@ function Grid(props) {
     const [grid, setGrid] = useState([...animation.GetEmptyGrid()]);
     const [algorithmSettings, setAlgorithmSettings] = useState(new AlgorithmSettings());
     const [buttonsVisibility, setButtonsVisibility] = useState(new ButtonsVisibility());
+    const [algorithmResults, setAlgorithmResults] = useState({ time: 0, length: 0 })
     const frameTime = 1;
 
     useEffect(() => {
@@ -64,8 +65,10 @@ function Grid(props) {
         if (!animation.CanRun())
             return;
 
+
         if (animation.HasInitState()) {
-            await animation.SetFrames(grid);
+            let result = await animation.SetFrames(grid);
+            setAlgorithmResults(result);
         }
         animation.SetState(AnimationState.Run);
         setButtonsVisibility(prev => prev.Run());
@@ -92,12 +95,14 @@ function Grid(props) {
         animation.Reset();
         setButtonsVisibility(prev => prev.Init(algorithmSettings.GetAlgorithm()));
         setGrid(animation.GetEmptyGrid());
+        setAlgorithmResults({ time: 0, length: 0 });
     }
 
     const clearPath = (e) => {
         animation.Reset();
         setButtonsVisibility(prev => prev.Init(algorithmSettings.GetAlgorithm()));
-        setGrid(animation.GetGridWithoutPath([...grid]))
+        setGrid(animation.GetGridWithoutPath([...grid]));
+        setAlgorithmResults({ time: 0, length: 0 });
     }
 
     const handleSelectAlgorithm = (e) => {
@@ -112,12 +117,6 @@ function Grid(props) {
         animation.SetMetricType(value);
         setAlgorithmSettings(prev => prev.SetMetric(value));
     }
-    var test = {
-        AStar: 0,
-        BreadthFirstSearch: 1,
-        BestFirstSearch: 2,
-        Dijkstra: 3
-    };
 
     return (
         <div>
@@ -168,6 +167,10 @@ function Grid(props) {
                     )
                 }
             </DropdownButton>
+
+            <label>Time: {algorithmResults.time}ms</label>
+            <br></br>
+            <label>Path length: {algorithmResults.length}</label>
         </div>
     );
 }

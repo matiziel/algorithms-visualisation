@@ -63,7 +63,9 @@ class Animation {
     }
 
     async SetFrames(grid) {
-        this.frames = await ApiClient.getAlgorithm(grid, this.start, this.end, this.algorithmType, this.metricType);
+        let result = await ApiClient.getAlgorithm(grid, this.start, this.end, this.algorithmType, this.metricType);
+        this.frames = result.frames;
+        return { time: result.time, length: result.pathLength }
     }
 
     SetAlgorithmType = (type) => this.algorithmType = type;

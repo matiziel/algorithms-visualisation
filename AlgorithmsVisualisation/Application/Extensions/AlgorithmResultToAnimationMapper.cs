@@ -19,7 +19,7 @@ namespace Application.Extensions {
                     );
                 }
             }
-            animation.Time = algorithmResult.TimeSpan.TotalSeconds;
+            animation.Time = algorithmResult.TimeSpan.TotalMilliseconds;
             animation.PathLength = algorithmResult.PathLength;
             return animation;
         }

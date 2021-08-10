@@ -14,7 +14,7 @@ const ApiClient = {
                     MetricType: metricType,
                 }
             );
-            return result.data.frames;
+            return result.data;
         }
         catch (error) {
             return [];
