@@ -25,7 +25,7 @@ namespace GraphsAlgorithms.Algorithms {
             var cameFrom = new Dictionary<int, int>();
 
 
-            var openSet = new SimplePriorityQueue<Vertex, double>();
+            var openSet = new FastPriorityQueue<Vertex>(_graph.Count);
             openSet.Enqueue(_graph[_startIndex], HeuristicFunction(_startIndex));
 
             while (openSet.Count > 0) {
@@ -71,7 +71,7 @@ namespace GraphsAlgorithms.Algorithms {
             };
         }
 
-        private double HeuristicFunction(int start) =>
+        private float HeuristicFunction(int start) =>
             _graph.GetDistance(start, _endIndex);
     }
 }
