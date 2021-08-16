@@ -12,7 +12,7 @@ namespace GraphsAlgorithms.GraphModel {
         }
         public Vertex this[int index] => _adjacencyList[index];
 
-        public double GetDistance(int start, int end) =>
+        public float GetDistance(int start, int end) =>
             _metric.GetDistance(_adjacencyList[start], _adjacencyList[end]);
 
         public int Count => _adjacencyList.Count;

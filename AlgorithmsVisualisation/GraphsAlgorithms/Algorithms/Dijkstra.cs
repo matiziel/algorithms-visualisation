@@ -71,17 +71,17 @@ namespace GraphsAlgorithms.Algorithms {
             };
         }
 
-        private List<double> GetDistances() {
-            var distances = new List<double>(_graph.Count);
+        private List<float> GetDistances() {
+            var distances = new List<float>(_graph.Count);
             for (int i = 0; i < _graph.Count; i++) {
-                distances.Add(double.MaxValue);
+                distances.Add(float.MaxValue);
             }
             distances[_startIndex] = 0;
             return distances;
         }
 
-        private SimplePriorityQueue<Vertex, double> GetPriorityQueue(List<double> distances) {
-            var priorityQueue = new SimplePriorityQueue<Vertex, double>();
+        private FastPriorityQueue<Vertex> GetPriorityQueue(List<float> distances) {
+            var priorityQueue = new FastPriorityQueue<Vertex>(_graph.Count);
 
             foreach (var vertex in _graph) {
                 priorityQueue.Enqueue(vertex, distances[vertex.Index]);

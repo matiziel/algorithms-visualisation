@@ -3,8 +3,8 @@ using GraphsAlgorithms.GraphModel;
 namespace GraphsAlgorithms.Metrics {
     public interface IMetric {
 
-        double VertexDiagonalDistance { get; }
-        double GetDistance(Vertex start, Vertex end);
+        float VertexDiagonalDistance { get; }
+        float GetDistance(Vertex start, Vertex end);
 
     }
 }

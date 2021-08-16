@@ -22,7 +22,7 @@ namespace GraphsAlgorithms.Algorithms {
             int pathLength = 0;
 
             var gScore = GetDistances(
-                valueForStart: 0.0
+                valueForStart: 0.0f
             );
             var fScore = GetDistances(
                 valueForStart: HeuristicFunction(_startIndex)
@@ -30,7 +30,7 @@ namespace GraphsAlgorithms.Algorithms {
 
             var cameFrom = new Dictionary<int, int>();
 
-            var openSet = new SimplePriorityQueue<Vertex, double>();
+            var openSet = new FastPriorityQueue<Vertex>(_graph.Count);
             openSet.Enqueue(_graph[_startIndex], fScore[_startIndex]);
 
             while (openSet.Count > 0) {
@@ -86,16 +86,16 @@ namespace GraphsAlgorithms.Algorithms {
             };
         }
 
-        private List<double> GetDistances(double valueForStart) {
-            var distances = new List<double>(_graph.Count);
+        private List<float> GetDistances(float valueForStart) {
+            var distances = new List<float>(_graph.Count);
             for (int i = 0; i < _graph.Count; i++) {
-                distances.Add(double.MaxValue);
+                distances.Add(float.MaxValue);
             }
             distances[_startIndex] = valueForStart;
             return distances;
         }
 
-        private double HeuristicFunction(int start) =>
+        private float HeuristicFunction(int start) =>
             _graph.GetDistance(start, _endIndex);
     }
 }

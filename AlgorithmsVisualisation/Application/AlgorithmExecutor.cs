@@ -20,11 +20,9 @@ namespace Application {
             var graph = _builder.BuildGraphFromGrid(grid.GridArray, grid.MetricType);
             var algorithm = _factory.Create(graph, grid.Start, grid.End, grid.AlgorithmType);
 
-            var animation = GetAlgorithmTimeCounter(algorithm)
+            return GetAlgorithmTimeCounter(algorithm)
                 .Execute()
                 .CreateAnimation();
-
-            return animation;
         }
 
         private static AlgorithmTimeCounter GetAlgorithmTimeCounter(IPathFindingAlgorithm algorithm) =>
