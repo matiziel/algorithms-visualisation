@@ -19,9 +19,11 @@ class DrawingHandler {
     HandleMouseDown(value) {
         if (value === VertexState.Begin) {
             this.SetState(DrawingState.MovingBegin);
+            return VertexState.Begin;
         }
         else if (value === VertexState.End) {
             this.SetState(DrawingState.MovingEnd);
+            return VertexState.End;
         }
         else if (value === VertexState.Disabled) {
             this.SetState(DrawingState.ErasingWalls);

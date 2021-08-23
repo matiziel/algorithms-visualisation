@@ -6,10 +6,12 @@ namespace GraphsAlgorithms.GraphModel {
     public class Graph : IEnumerable<Vertex> {
         private readonly List<Vertex> _adjacencyList;
         private readonly IMetric _metric;
+        
         public Graph(List<Vertex> adjacencyList, IMetric metric) {
             _adjacencyList = adjacencyList;
             _metric = metric;
         }
+        
         public Vertex this[int index] => _adjacencyList[index];
 
         public float GetDistance(int start, int end) =>
