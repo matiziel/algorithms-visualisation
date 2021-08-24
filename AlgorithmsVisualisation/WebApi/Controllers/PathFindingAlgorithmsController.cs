@@ -18,6 +18,9 @@ namespace WebApi.Controllers {
         [HttpPost]
         public ActionResult Execute([FromBody] Grid grid) {
             try {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
                 return Ok(_executor.Execute(grid));
             }
             catch (Exception) {
