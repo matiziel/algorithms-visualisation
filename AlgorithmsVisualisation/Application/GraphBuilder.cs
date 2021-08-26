@@ -38,6 +38,7 @@ namespace Application {
             return metricType switch {
                 MetricType.Euclidean => new Euclidean(),
                 MetricType.Manhattan => new Manhattan(),
+                MetricType.Maximum => new Maximum(),
                 _ => throw new ArgumentException("Given metric does not exist")
             };
         }

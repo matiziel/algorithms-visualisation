@@ -39,6 +39,8 @@ class AlgorithmSettings {
                 return "Euclidean";
             case MetricType.Manhattan:
                 return "Manhattan";
+            case MetricType.Maximum:
+                return "Maximum";
             default:
                 return "";
         }
