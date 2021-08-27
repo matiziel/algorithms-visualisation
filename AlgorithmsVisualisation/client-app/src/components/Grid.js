@@ -67,6 +67,7 @@ function Grid(props) {
 
 
         if (animation.HasInitState()) {
+            clearPath();
             let result = await animation.SetFrames(grid);
             setAlgorithmResults(result);
         }
@@ -91,14 +92,14 @@ function Grid(props) {
 
     }
 
-    const clearGrid = (e) => {
+    const clearGrid = () => {
         animation.Reset();
         setButtonsVisibility(prev => prev.Init(algorithmSettings.GetAlgorithm()));
         setGrid(animation.GetEmptyGrid());
         setAlgorithmResults({ time: 0, length: 0 });
     }
 
-    const clearPath = (e) => {
+    const clearPath = () => {
         animation.Reset();
         setButtonsVisibility(prev => prev.Init(algorithmSettings.GetAlgorithm()));
         setGrid(animation.GetGridWithoutPath([...grid]));
@@ -116,6 +117,12 @@ function Grid(props) {
         let value = parseInt(e);
         animation.SetMetricType(value);
         setAlgorithmSettings(prev => prev.SetMetric(value));
+    }
+
+    const handleSelectSpeed = (e) => {
+        let value = parseInt(e);
+        animation.SetSpeed(value);
+        setAlgorithmSettings(prev => prev.SetSpeed(value));
     }
 
     return (
@@ -164,6 +171,19 @@ function Grid(props) {
                 {
                     Object.values(MetricType).map(item =>
                         <Dropdown.Item eventKey={item}>{algorithmSettings.GetMetricName(item)}</Dropdown.Item>
+                    )
+                }
+            </DropdownButton>
+
+            <label>Speed:</label>
+            <DropdownButton
+                title={algorithmSettings.GetCurrentSpeedName()}
+                disabled={!buttonsVisibility.GetAlgorithmSettings()}
+                id="dropdown-menu-align-right"
+                onSelect={handleSelectSpeed}>
+                {
+                    [1, 2, 4, 8].map(item =>
+                        <Dropdown.Item eventKey={item}>{algorithmSettings.GetSpeedName(item)}</Dropdown.Item>
                     )
                 }
             </DropdownButton>

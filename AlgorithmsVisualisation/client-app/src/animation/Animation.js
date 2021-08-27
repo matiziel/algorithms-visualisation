@@ -15,6 +15,7 @@ class Animation {
     end;
     algorithmType;
     metricType;
+    speed;
 
     constructor(width, height) {
         this.state = AnimationState.Init;
@@ -26,6 +27,7 @@ class Animation {
         this.end = 624;
         this.algorithmType = AlgorithmType.AStar;
         this.metricType = MetricType.Euclidean;
+        this.speed = 1;
     }
 
     GetEmptyGrid() {
@@ -63,7 +65,7 @@ class Animation {
     }
 
     async SetFrames(grid) {
-        let result = await ApiClient.getAlgorithm(grid, this.start, this.end, this.algorithmType, this.metricType);
+        let result = await ApiClient.getAlgorithm(grid, this.start, this.end, this.algorithmType, this.metricType, this.speed);
         this.frames = result.frames;
         return { time: result.time, length: result.pathLength }
     }
@@ -75,6 +77,10 @@ class Animation {
     SetMetricType = (type) => this.metricType = type;
 
     GetMetricType = () => this.metricType;
+
+    SetSpeed = (speed) => this.speed = speed;
+
+    GetSpeed = () => this.speed;
 
     Reset() {
         this.state = AnimationState.Init;
@@ -90,6 +96,7 @@ class Animation {
             newGrid[x][y] = frame[i][2];
         }
         this.currentFrame += 1;
+
         return newGrid;
     }
 

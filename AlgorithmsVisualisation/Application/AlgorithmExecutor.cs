@@ -22,7 +22,7 @@ namespace Application {
 
             return GetAlgorithmTimeCounter(algorithm)
                 .Execute()
-                .CreateAnimation();
+                .CreateAnimationOptimized(grid.Speed);
         }
 
         private static AlgorithmTimeCounter GetAlgorithmTimeCounter(IPathFindingAlgorithm algorithm) =>

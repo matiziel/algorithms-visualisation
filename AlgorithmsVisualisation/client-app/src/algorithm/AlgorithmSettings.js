@@ -4,20 +4,23 @@ import MetricType from "./MetricType";
 class AlgorithmSettings {
     algorithm;
     metric;
+    speed;
 
     constructor() {
         this.algorithm = AlgorithmType.AStar;
         this.metric = MetricType.Euclidean;
+        this.speed = 1;
     }
 
-    SetValues(algorithm, metric) {
+    SetValues(algorithm, metric, speed) {
         this.algorithm = algorithm;
         this.metric = metric;
+        this.speed = speed;
     }
 
     SetMetric = (metric) => {
         let settings = new AlgorithmSettings();
-        settings.SetValues(this.algorithm, metric);
+        settings.SetValues(this.algorithm, metric, this.speed);
         return settings;
     }
 
@@ -25,11 +28,19 @@ class AlgorithmSettings {
 
     SetAlgorithm = (algorithm) => {
         let settings = new AlgorithmSettings();
-        settings.SetValues(algorithm, this.metric);
+        settings.SetValues(algorithm, this.metric, this.speed);
         return settings;
     }
 
     GetAlgorithm = () => this.algorithm;
+
+    SetSpeed = (speed) => {
+        let settings = new AlgorithmSettings();
+        settings.SetValues(this.algorithm, this.metric, speed);
+        return settings;
+    }
+
+    GetSpeed = () => this.speed;
 
     GetCurrentMetricName = () => this.GetMetricName(this.metric);
 
@@ -61,6 +72,12 @@ class AlgorithmSettings {
             default:
                 return "";
         }
+    }
+
+    GetCurrentSpeedName = () => this.GetSpeedName(this.speed);
+
+    GetSpeedName(speed) {
+        return speed + "x";
     }
 }
 
