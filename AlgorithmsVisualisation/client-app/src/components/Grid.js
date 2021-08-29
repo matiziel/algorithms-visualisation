@@ -64,7 +64,9 @@ function Grid(props) {
     const runAlgorithm = async () => {
         if (!animation.CanRun())
             return;
-
+        console.log(JSON.stringify(grid));
+        console.log(animation.start);
+        console.log(animation.end);
 
         if (animation.HasInitState()) {
             clearPath();

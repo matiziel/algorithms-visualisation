@@ -28,5 +28,19 @@ namespace WebApi.Controllers {
             }
         }
 
+        [HttpPost]
+        [Route("test/{testCount:int}")]
+        public ActionResult TestExecute([FromBody] Grid grid, int testCount) {
+            try {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(_executor.TestExecute(grid, testCount));
+            }
+            catch (Exception) {
+                return BadRequest();
+            }
+        }
+
     }
 }

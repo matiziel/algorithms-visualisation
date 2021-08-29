@@ -24,6 +24,5 @@ namespace Contracts.DataTransferObjects {
 
         [Range(1, 8)]
         public int Speed { get; set; }
-
     }
 }

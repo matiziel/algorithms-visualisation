@@ -20,12 +20,27 @@ namespace Application {
             var graph = _builder.BuildGraphFromGrid(grid.GridArray, grid.MetricType);
             var algorithm = _factory.Create(graph, grid.Start, grid.End, grid.AlgorithmType);
 
-            return GetAlgorithmTimeCounter(algorithm)
+            return GetAlgorithmTimeCounterDecorator(algorithm)
                 .Execute()
                 .CreateAnimationOptimized(grid.Speed);
         }
 
-        private static AlgorithmTimeCounter GetAlgorithmTimeCounter(IPathFindingAlgorithm algorithm) =>
+        public TestResult TestExecute(Grid grid, int testCount) {
+            double averageTime = 0.0;
+
+            for (int i = 0; i < testCount; ++i) {
+                var graph = _builder.BuildGraphFromGrid(grid.GridArray, grid.MetricType);
+                var algorithm = _factory.Create(graph, grid.Start, grid.End, grid.AlgorithmType);
+                var algorithmResult = GetAlgorithmTimeCounterDecorator(algorithm).Execute();
+                averageTime += algorithmResult.TimeSpan.TotalMilliseconds;
+            }
+
+            return new TestResult() {
+                AverageTime = averageTime / testCount
+            };
+        }
+
+        private static AlgorithmTimeCounter GetAlgorithmTimeCounterDecorator(IPathFindingAlgorithm algorithm) =>
             new(algorithm);
     }
 }
