@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Common;
-using Contracts.DataTransferObjects;
 using Contracts.Services;
 using GraphsAlgorithms.GraphModel;
-using Contracts.Extensions;
 using Application.Models;
 using GraphsAlgorithms.Metrics;
 

@@ -9,16 +9,13 @@ using GraphsAlgorithms.Algorithms;
 namespace Application {
     public class AlgorithmExecutor : IAlgorithmExecutor {
         private readonly IAlgorithmFactory _factory;
-        private readonly IGraphBuilder _builder;
 
-        public AlgorithmExecutor(IAlgorithmFactory factory, IGraphBuilder builder) {
+        public AlgorithmExecutor(IAlgorithmFactory factory) =>
             _factory = factory;
-            _builder = builder;
-        }
+
 
         public Animation Execute(Grid grid) {
-            var graph = _builder.BuildGraphFromGrid(grid.GridArray, grid.MetricType);
-            var algorithm = _factory.Create(graph, grid.Start, grid.End, grid.AlgorithmType);
+            var algorithm = _factory.Create(grid);
 
             return GetAlgorithmTimeCounterDecorator(algorithm)
                 .Execute()
@@ -29,8 +26,7 @@ namespace Application {
             double averageTime = 0.0;
 
             for (int i = 0; i < testCount; ++i) {
-                var graph = _builder.BuildGraphFromGrid(grid.GridArray, grid.MetricType);
-                var algorithm = _factory.Create(graph, grid.Start, grid.End, grid.AlgorithmType);
+                var algorithm = _factory.Create(grid);
                 var algorithmResult = GetAlgorithmTimeCounterDecorator(algorithm).Execute();
                 averageTime += algorithmResult.TimeSpan.TotalMilliseconds;
             }

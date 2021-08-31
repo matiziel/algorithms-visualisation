@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using Common;
+using Contracts.DataTransferObjects;
 using GraphsAlgorithms.Algorithms;
-using GraphsAlgorithms.GraphModel;
 
 namespace Contracts.Services {
     public interface IAlgorithmFactory {
-        public IPathFindingAlgorithm Create(Graph graph, int start, int end, AlgorithmType type);
+        public IPathFindingAlgorithm Create(Grid grid);
     }
 }
