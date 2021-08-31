@@ -6,7 +6,7 @@ namespace GraphsAlgorithms.GraphModel {
         public int Index { get; }
         public int X { get; }
         public int Y { get; }
-        public VertexState State { get; set; }
+        public VertexState State { get; private set; }
         public Dictionary<int, float> Edges { get; private set; }
         public Vertex(int index, int x, int y) {
             Index = index;
