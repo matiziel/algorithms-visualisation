@@ -20,10 +20,9 @@ namespace GraphsAlgorithms.Algorithms {
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
             int pathLength = 0;
+            int visitedVertices = 0;
 
             var queue = new Queue<Vertex>();
-
-            _graph[_startIndex].Visit();
             queue.Enqueue(_graph[_startIndex]);
 
             var cameFrom = new Dictionary<int, int>();
@@ -38,6 +37,9 @@ namespace GraphsAlgorithms.Algorithms {
                     break;
                 }
 
+                current.Visit();
+                ++visitedVertices;
+
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
                 };
@@ -47,15 +49,14 @@ namespace GraphsAlgorithms.Algorithms {
                 foreach (int neighborIndex in current.Edges.Keys) {
                     var neighbor = _graph[neighborIndex];
 
-                    if (_graph[neighborIndex].IsVisited())
+                    if (neighbor.IsVisited() || queue.Contains(neighbor))
                         continue;
+
+                    cameFrom[neighborIndex] = current.Index;
+                    queue.Enqueue(neighbor);
 
                     if (neighborIndex != _endIndex)
                         frame.AddOpenSetVertexFrameElement(neighbor);
-
-                    cameFrom[neighborIndex] = current.Index;
-                    neighbor.Visit();
-                    queue.Enqueue(neighbor);
                 }
                 frames.Add(frame);
             }

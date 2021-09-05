@@ -20,6 +20,7 @@ namespace GraphsAlgorithms.Algorithms {
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
             int pathLength = 0;
+            int visitedVertices = 0;
 
             var gScore = GetDistances(
                 valueForStart: 0.0f
@@ -46,8 +47,8 @@ namespace GraphsAlgorithms.Algorithms {
                 if (current.IsVisited())
                     continue;
 
-
                 current.Visit();
+                ++visitedVertices;
 
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
@@ -73,16 +74,18 @@ namespace GraphsAlgorithms.Algorithms {
                             openSet.UpdatePriority(neighbor, fScore[neighborIndex]);
                         else
                             openSet.Enqueue(neighbor, fScore[neighborIndex]);
+
+                        if (neighborIndex != _endIndex)
+                            frame.AddOpenSetVertexFrameElement(neighbor);
                     }
-                    if (neighborIndex != _endIndex)
-                        frame.AddOpenSetVertexFrameElement(neighbor);
                 }
 
                 frames.Add(frame);
             }
             return new AlgorithmResult() {
                 Frames = frames,
-                PathLength = pathLength
+                PathLength = pathLength,
+                VisitedVertices = visitedVertices
             };
         }
 

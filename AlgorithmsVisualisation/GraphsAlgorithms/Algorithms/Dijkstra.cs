@@ -18,6 +18,7 @@ namespace GraphsAlgorithms.Algorithms {
         public AlgorithmResult Execute() {
             List<Frame> frames = new();
             int pathLength = 0;
+            int visitedVertices = 0;
 
             var distances = GetDistances();
             var priorityQueue = GetPriorityQueue(distances);
@@ -38,6 +39,7 @@ namespace GraphsAlgorithms.Algorithms {
                     continue;
 
                 current.Visit();
+                ++visitedVertices;
 
                 var frame = new Frame() {
                     FrameElements = new List<FrameElement>()
@@ -58,16 +60,17 @@ namespace GraphsAlgorithms.Algorithms {
 
                         distances[neighborIndex] = tmp;
                         priorityQueue.UpdatePriority(neighbor, distances[neighborIndex]);
-                    }
-                    if (neighborIndex != _endIndex)
-                        frame.AddOpenSetVertexFrameElement(neighbor);
-                }
 
+                        if (neighborIndex != _endIndex)
+                            frame.AddOpenSetVertexFrameElement(neighbor);
+                    }
+                }
                 frames.Add(frame);
             }
             return new AlgorithmResult() {
                 Frames = frames,
-                PathLength = pathLength
+                PathLength = pathLength,
+                VisitedVertices = visitedVertices
             };
         }
 

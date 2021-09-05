@@ -29,13 +29,27 @@ namespace WebApi.Controllers {
         }
 
         [HttpPost]
-        [Route("test/{testCount:int}")]
-        public ActionResult TestExecute([FromBody] Grid grid, int testCount) {
+        [Route("test/algorithms/{testCount:int}")]
+        public ActionResult TestAlgorithmsExecute([FromBody] Grid grid, int testCount) {
             try {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                return Ok(_executor.TestExecute(grid, testCount));
+                return Ok(_executor.TestAlgorithmsExecute(grid, testCount));
+            }
+            catch (Exception) {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("test/metrics/{testCount:int}")]
+        public ActionResult TestMetricsExecute([FromBody] Grid grid, int testCount) {
+            try {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
+                return Ok(_executor.TestMetricsExecute(grid, testCount));
             }
             catch (Exception) {
                 return BadRequest();
