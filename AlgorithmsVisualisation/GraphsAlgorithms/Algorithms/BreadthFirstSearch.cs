@@ -64,7 +64,8 @@ namespace GraphsAlgorithms.Algorithms {
 
             return new AlgorithmResult() {
                 Frames = frames,
-                PathLength = pathLength
+                PathLength = pathLength,
+                VisitedVertices = visitedVertices
             };
         }
 
