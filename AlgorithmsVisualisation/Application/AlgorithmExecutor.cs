@@ -28,54 +28,39 @@ namespace Application {
 
             foreach (AlgorithmType type in
                 new List<AlgorithmType> { AlgorithmType.BreadthFirstSearch, AlgorithmType.Dijkstra }) {
-                double averageTime = 0.0;
-                int visitedVertices = 0;
 
                 grid.AlgorithmType = type;
-                for (int i = 0; i < testCount; ++i) {
-                    var algorithmResult = GetTimeFromAlgorithm(grid);
-                    averageTime += algorithmResult.Item1;
-                    visitedVertices = algorithmResult.Item2;
-                }
-                result.Add(
-                    new TestResult() {
-                        AlgorithmType = type,
-                        AverageTime = averageTime / testCount,
-                        MetricType = grid.MetricType,
-                        VisitedVertices = visitedVertices
-                    }
-                );
+                result.Add(GetTestResult(grid, testCount));
             }
             foreach (MetricType type in Enum.GetValues(typeof(MetricType))) {
-                double averageTime = 0.0;
-                int visitedVertices = 0;
-                grid.MetricType = type;
 
+                grid.MetricType = type;
                 foreach (AlgorithmType algorithmType in
                     new List<AlgorithmType> { AlgorithmType.AStar, AlgorithmType.BestFirstSearch }) {
+
                     grid.AlgorithmType = algorithmType;
-                    for (int i = 0; i < testCount; ++i) {
-                        var algorithmResult = GetTimeFromAlgorithm(grid);
-                        averageTime += algorithmResult.Item1;
-                        visitedVertices = algorithmResult.Item2;
-                    }
-                    result.Add(
-                        new TestResult() {
-                            AlgorithmType = algorithmType,
-                            AverageTime = averageTime / testCount,
-                            MetricType = type,
-                            VisitedVertices = visitedVertices
-                        }
-                    );
+                    result.Add(GetTestResult(grid, testCount));
                 }
             }
             return result;
         }
 
-        private (double, int) GetTimeFromAlgorithm(Grid grid) {
-            var algorithm = _factory.Create(grid);
-            var algorithmResult = GetAlgorithmTimeCounterDecorator(algorithm).Execute();
-            return (algorithmResult.TimeSpan.TotalMilliseconds, algorithmResult.VisitedVertices);
+        private TestResult GetTestResult(Grid grid, int testCount) {
+            double averageTime = 0.0;
+            int visitedVertices = 0;
+            for (int i = 0; i < testCount; ++i) {
+                var algorithm = _factory.Create(grid);
+                var algorithmResult = GetAlgorithmTimeCounterDecorator(algorithm).Execute();
+                averageTime += algorithmResult.TimeSpan.TotalMilliseconds;
+                visitedVertices = algorithmResult.VisitedVertices;
+            }
+            return new TestResult() {
+                AlgorithmType = grid.AlgorithmType,
+                AverageTime = averageTime / testCount,
+                MetricType = grid.MetricType,
+                VisitedVertices = visitedVertices
+            };
+
         }
 
         private static AlgorithmTimeCounter GetAlgorithmTimeCounterDecorator(IPathFindingAlgorithm algorithm) =>
