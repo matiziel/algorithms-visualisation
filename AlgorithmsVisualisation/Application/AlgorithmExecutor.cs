@@ -30,14 +30,13 @@ namespace Application {
                 double averageTime = 0.0;
                 grid.AlgorithmType = type;
                 for (int i = 0; i < testCount; ++i) {
-                    var algorithm = _factory.Create(grid);
-                    var algorithmResult = GetAlgorithmTimeCounterDecorator(algorithm).Execute();
-                    averageTime += algorithmResult.TimeSpan.TotalMilliseconds;
+                    averageTime += GetTimeFromAlgorithm(grid);
                 }
                 result.Add(
                     new TestResult() {
                         AlgorithmType = type,
-                        AverageTime = averageTime / testCount
+                        AverageTime = averageTime / testCount,
+                        MetricType = grid.MetricType
                     }
                 );
             }
@@ -47,22 +46,32 @@ namespace Application {
         public IEnumerable<TestResult> TestMetricsExecute(Grid grid, int testCount) {
             var result = new List<TestResult>();
 
-            foreach (AlgorithmType type in Enum.GetValues(typeof(AlgorithmType))) {
+            foreach (MetricType type in Enum.GetValues(typeof(MetricType))) {
                 double averageTime = 0.0;
-                grid.AlgorithmType = type;
-                for (int i = 0; i < testCount; ++i) {
-                    var algorithm = _factory.Create(grid);
-                    var algorithmResult = GetAlgorithmTimeCounterDecorator(algorithm).Execute();
-                    averageTime += algorithmResult.TimeSpan.TotalMilliseconds;
-                }
-                result.Add(
-                    new TestResult() {
-                        AlgorithmType = type,
-                        AverageTime = averageTime / testCount
+                grid.MetricType = type;
+
+                foreach (AlgorithmType algorithmType in
+                    new List<AlgorithmType> { AlgorithmType.AStar, AlgorithmType.BestFirstSearch }) {
+                    grid.AlgorithmType = algorithmType;
+                    for (int i = 0; i < testCount; ++i) {
+                        averageTime += GetTimeFromAlgorithm(grid);
                     }
-                );
+                    result.Add(
+                        new TestResult() {
+                            AlgorithmType = algorithmType,
+                            AverageTime = averageTime / testCount,
+                            MetricType = type
+                        }
+                    );
+                }
             }
             return result;
+        }
+
+        private double GetTimeFromAlgorithm(Grid grid) {
+            var algorithm = _factory.Create(grid);
+            var algorithmResult = GetAlgorithmTimeCounterDecorator(algorithm).Execute();
+            return algorithmResult.TimeSpan.TotalMilliseconds;
         }
 
         private static AlgorithmTimeCounter GetAlgorithmTimeCounterDecorator(IPathFindingAlgorithm algorithm) =>
