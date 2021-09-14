@@ -7,5 +7,6 @@ namespace Contracts.DataTransferObjects {
         public MetricType MetricType { get; set; }
         public double AverageTime { get; set; }
         public int VisitedVertices { get; set; }
+        public int PathLength { get; set; }
     }
 }

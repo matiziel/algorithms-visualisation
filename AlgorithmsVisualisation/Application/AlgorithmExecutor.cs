@@ -32,33 +32,36 @@ namespace Application {
                 grid.AlgorithmType = type;
                 result.Add(GetTestResult(grid, testCount));
             }
-            foreach (MetricType type in Enum.GetValues(typeof(MetricType))) {
-
-                grid.MetricType = type;
-                foreach (AlgorithmType algorithmType in
+            foreach (AlgorithmType algorithmType in
                     new List<AlgorithmType> { AlgorithmType.AStar, AlgorithmType.BestFirstSearch }) {
 
-                    grid.AlgorithmType = algorithmType;
+                grid.AlgorithmType = algorithmType;
+                foreach (MetricType type in Enum.GetValues(typeof(MetricType))) {
+                    grid.MetricType = type;
                     result.Add(GetTestResult(grid, testCount));
                 }
             }
+
             return result;
         }
 
         private TestResult GetTestResult(Grid grid, int testCount) {
             double averageTime = 0.0;
             int visitedVertices = 0;
+            int pathLength = 0;
             for (int i = 0; i < testCount; ++i) {
                 var algorithm = _factory.Create(grid);
                 var algorithmResult = GetAlgorithmTimeCounterDecorator(algorithm).Execute();
                 averageTime += algorithmResult.TimeSpan.TotalMilliseconds;
                 visitedVertices = algorithmResult.VisitedVertices;
+                pathLength = algorithmResult.PathLength;
             }
             return new TestResult() {
                 AlgorithmType = grid.AlgorithmType,
                 AverageTime = averageTime / testCount,
                 MetricType = grid.MetricType,
-                VisitedVertices = visitedVertices
+                VisitedVertices = visitedVertices,
+                PathLength = pathLength
             };
 
         }
