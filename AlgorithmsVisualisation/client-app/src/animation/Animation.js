@@ -23,8 +23,8 @@ class Animation {
         this.width = width;
         this.height = height;
         this.frames = [];
-        this.start = 1;
-        this.end = 2;
+        this.start = 176;
+        this.end = 624;
         this.algorithmType = AlgorithmType.AStar;
         this.metricType = MetricType.Euclidean;
         this.speed = 1;

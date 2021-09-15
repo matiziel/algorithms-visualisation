@@ -16,12 +16,12 @@ namespace WebApi.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Execute([FromBody] Grid grid) {
+        public async Task<ActionResult> Execute([FromBody] Grid grid) {
             try {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                return Ok(_executor.Execute(grid));
+                return Ok(await _executor.Execute(grid));
             }
             catch (Exception) {
                 return BadRequest();
@@ -30,12 +30,12 @@ namespace WebApi.Controllers {
 
         [HttpPost]
         [Route("test/{testCount:int}")]
-        public ActionResult TestAlgorithmsExecute([FromBody] Grid grid, int testCount) {
+        public async Task<ActionResult> TestAlgorithmsExecute([FromBody] Grid grid, int testCount) {
             try {
                 if (!ModelState.IsValid)
                     return BadRequest();
 
-                return Ok(_executor.TestExecute(grid, testCount));
+                return Ok(await _executor.TestExecute(grid, testCount));
             }
             catch (Exception) {
                 return BadRequest();

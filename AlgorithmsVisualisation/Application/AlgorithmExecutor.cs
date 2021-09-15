@@ -6,6 +6,7 @@ using System;
 using GraphsAlgorithms.Result;
 using GraphsAlgorithms.Algorithms;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Application {
     public class AlgorithmExecutor : IAlgorithmExecutor {
@@ -15,34 +16,41 @@ namespace Application {
             _factory = factory;
 
 
-        public Animation Execute(Grid grid) {
-            var algorithm = _factory.Create(grid);
+        public async Task<Animation> Execute(Grid grid) {
+            var task = new Task<Animation>(() => {
+                var algorithm = _factory.Create(grid);
 
-            return GetAlgorithmTimeCounterDecorator(algorithm)
-                .Execute()
-                .CreateAnimationOptimized(grid.Speed);
+                return GetAlgorithmTimeCounterDecorator(algorithm)
+                    .Execute()
+                    .CreateAnimationOptimized(grid.Speed);
+            });
+            task.Start();
+            return await task;
         }
 
-        public IEnumerable<TestResult> TestExecute(Grid grid, int testCount) {
-            var result = new List<TestResult>();
+        public async Task<IEnumerable<TestResult>> TestExecute(Grid grid, int testCount) {
+            var task = new Task<IEnumerable<TestResult>>(() => {
+                var result = new List<TestResult>();
 
-            foreach (AlgorithmType type in
-                new List<AlgorithmType> { AlgorithmType.BreadthFirstSearch, AlgorithmType.Dijkstra }) {
+                foreach (AlgorithmType type in
+                    new List<AlgorithmType> { AlgorithmType.BreadthFirstSearch, AlgorithmType.Dijkstra }) {
 
-                grid.AlgorithmType = type;
-                result.Add(GetTestResult(grid, testCount));
-            }
-            foreach (AlgorithmType algorithmType in
-                    new List<AlgorithmType> { AlgorithmType.AStar, AlgorithmType.BestFirstSearch }) {
-
-                grid.AlgorithmType = algorithmType;
-                foreach (MetricType type in Enum.GetValues(typeof(MetricType))) {
-                    grid.MetricType = type;
+                    grid.AlgorithmType = type;
                     result.Add(GetTestResult(grid, testCount));
                 }
-            }
+                foreach (AlgorithmType algorithmType in
+                        new List<AlgorithmType> { AlgorithmType.AStar, AlgorithmType.BestFirstSearch }) {
 
-            return result;
+                    grid.AlgorithmType = algorithmType;
+                    foreach (MetricType type in Enum.GetValues(typeof(MetricType))) {
+                        grid.MetricType = type;
+                        result.Add(GetTestResult(grid, testCount));
+                    }
+                }
+                return result;
+            });
+            task.Start();
+            return await task;
         }
 
         private TestResult GetTestResult(Grid grid, int testCount) {
