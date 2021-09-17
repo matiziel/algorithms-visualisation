@@ -1,2 +1,2 @@
 # algorithms-visualisation
-Visualization of graph algorithms and operations on data structures using ASP.NET Core, React and d3.js.
+Visualization of graph pathfinding algorithms using ASP.NET Core and React.
