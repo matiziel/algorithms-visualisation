@@ -21,5 +21,9 @@ namespace GraphsAlgorithms.GraphModel {
             => State == VertexState.Visited;
         public void Visit()
             => State = VertexState.Visited;
+        public bool IsOpenSet()
+            => State == VertexState.OpenSet;
+        public void AddToOpenSet()
+            => State = VertexState.OpenSet;
     }
 }

@@ -54,10 +54,11 @@ namespace GraphsAlgorithms.Algorithms {
                 foreach (int neighborIndex in current.Edges.Keys) {
                     var neighbor = _graph[neighborIndex];
 
-                    if (neighbor.IsVisited() || openSet.Contains(neighbor))
+                    if (neighbor.IsVisited() || neighbor.IsOpenSet())
                         continue;
 
                     openSet.Enqueue(neighbor, HeuristicFunction(neighborIndex));
+                    neighbor.AddToOpenSet();
                     cameFrom[neighborIndex] = current.Index;
 
                     if (neighborIndex != _endIndex)

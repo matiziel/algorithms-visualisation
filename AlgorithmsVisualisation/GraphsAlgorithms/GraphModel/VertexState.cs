@@ -1,5 +1,5 @@
 namespace GraphsAlgorithms.GraphModel {
     public enum VertexState {
-        Unvisited, Visited
+        Unvisited, OpenSet, Visited
     }
 }

@@ -70,10 +70,12 @@ namespace GraphsAlgorithms.Algorithms {
                         gScore[neighborIndex] = tentativeGScore;
                         fScore[neighborIndex] = gScore[neighborIndex] + HeuristicFunction(neighborIndex);
 
-                        if (openSet.Contains(neighbor))
+                        if (neighbor.IsOpenSet())
                             openSet.UpdatePriority(neighbor, fScore[neighborIndex]);
-                        else
+                        else {
                             openSet.Enqueue(neighbor, fScore[neighborIndex]);
+                            neighbor.AddToOpenSet();
+                        }
 
                         if (neighborIndex != _endIndex)
                             frame.AddOpenSetVertexFrameElement(neighbor);
