@@ -26,7 +26,7 @@ namespace GraphsAlgorithms.Algorithms {
             var cameFrom = new Dictionary<int, int>();
 
 
-            var openSet = new FastPriorityQueue<Vertex>(_graph.Count);
+            var openSet = new SimplePriorityQueue<Vertex>();
             openSet.Enqueue(_graph[_startIndex], HeuristicFunction(_startIndex));
 
             while (openSet.Count > 0) {

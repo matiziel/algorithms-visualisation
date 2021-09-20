@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Priority_Queue;
 
 namespace GraphsAlgorithms.GraphModel {
-    public class Vertex : FastPriorityQueueNode {
+    public class Vertex : SimplePriorityQueue<float> {
         public int Index { get; }
         public int X { get; }
         public int Y { get; }

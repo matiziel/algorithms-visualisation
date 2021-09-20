@@ -83,8 +83,8 @@ namespace GraphsAlgorithms.Algorithms {
             return distances;
         }
 
-        private FastPriorityQueue<Vertex> GetPriorityQueue(List<float> distances) {
-            var priorityQueue = new FastPriorityQueue<Vertex>(_graph.Count);
+        private SimplePriorityQueue<Vertex> GetPriorityQueue(List<float> distances) {
+            var priorityQueue = new SimplePriorityQueue<Vertex>();
 
             foreach (var vertex in _graph) {
                 priorityQueue.Enqueue(vertex, distances[vertex.Index]);
