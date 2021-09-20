@@ -22,7 +22,7 @@ namespace GraphsAlgorithms.Algorithms {
             int pathLength = 0;
             int visitedVertices = 0;
 
-            var queue = new Queue<Vertex>();
+            var queue = new Queue<Vertex>(_graph.Count);
             queue.Enqueue(_graph[_startIndex]);
 
             var cameFrom = new Dictionary<int, int>();
@@ -49,10 +49,11 @@ namespace GraphsAlgorithms.Algorithms {
                 foreach (int neighborIndex in current.Edges.Keys) {
                     var neighbor = _graph[neighborIndex];
 
-                    if (neighbor.IsVisited() || queue.Contains(neighbor))
+                    if (neighbor.IsVisited() || neighbor.IsOpenSet())
                         continue;
 
                     cameFrom[neighborIndex] = current.Index;
+                    neighbor.OpenSet();
                     queue.Enqueue(neighbor);
 
                     if (neighborIndex != _endIndex)
